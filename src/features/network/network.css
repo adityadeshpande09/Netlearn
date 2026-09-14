@@ -1,0 +1,649 @@
+.simulation-session select,
+.lab-experiment select,
+.playground-controls select,
+.network-configuration select,
+.network-configuration input,
+.playground-controls input {
+  min-height: 44px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--foreground);
+  font-size: 0.875rem;
+  padding: 0.6rem 0.8rem;
+  max-width: 100%;
+}
+.simulation-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.playback-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+.playback-speed {
+  display: flex;
+  gap: 0.65rem;
+  align-items: center;
+}
+.simulation-step-count {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  margin-left: auto;
+}
+.simulation-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 1.2rem;
+  align-items: start;
+}
+.simulation-visual {
+  min-width: 0;
+}
+.topology-canvas {
+  height: 480px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  position: relative;
+}
+.topology-loading {
+  min-height: 480px;
+  display: grid;
+  place-items: center;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--muted);
+}
+.topology-keyboard-note {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  right: 14px;
+  pointer-events: none;
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-align: center;
+}
+.topology-device {
+  width: 166px;
+  min-height: 105px;
+  background: var(--surface);
+  color: var(--foreground);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.8rem 0.9rem;
+  box-shadow: 0 3px 10px rgb(24 46 69 / 5%);
+  transition:
+    border-color var(--duration-fast),
+    box-shadow var(--duration-fast);
+}
+.topology-device-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.6rem;
+  color: var(--accent);
+}
+.topology-device-heading > span {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.topology-device-heading .device-active-label {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--secondary);
+}
+.topology-device > strong {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.topology-device > p {
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.8;
+}
+.topology-device > p > span {
+  font-size: 0.75rem;
+}
+.topology-device.is-active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgb(18 86 187 / 10%);
+}
+.topology-device.is-selected {
+  outline: 2px solid var(--foreground);
+  outline-offset: 4px;
+}
+.topology-device .react-flow__handle {
+  width: 12px;
+  height: 12px;
+  background: var(--surface);
+  border: 2px solid var(--accent);
+}
+.react-flow__node:focus-visible .topology-device {
+  outline: 3px solid var(--accent);
+  outline-offset: 5px;
+}
+.topology-canvas .react-flow__controls {
+  box-shadow: var(--shadow);
+}
+.topology-canvas .react-flow__controls-button {
+  width: 36px;
+  height: 36px;
+  color: var(--foreground);
+  background: var(--surface);
+  border-color: var(--border);
+}
+.topology-canvas .react-flow__attribution {
+  font-size: 10px;
+}
+.topology-packet {
+  animation: netlearn-packet-hop 1600ms linear infinite;
+  offset-distance: 0%;
+}
+@keyframes netlearn-packet-hop {
+  to {
+    offset-distance: 100%;
+  }
+}
+.packet-inspector {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  overflow: hidden;
+}
+.inspector-heading {
+  padding: 1.1rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+}
+.inspector-heading h2 {
+  font-size: 1.15rem;
+  margin-top: 0.3rem;
+  letter-spacing: -0.025em;
+}
+.inspector-layer {
+  margin: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.inspector-layer h3 {
+  background: var(--surface-raised);
+  padding: 0.65rem 0.8rem;
+  font-size: 0.875rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.7rem;
+  align-items: baseline;
+}
+.inspector-layer h3 span {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+.inspector-layer dl > div {
+  padding: 0.6rem 0.8rem;
+}
+.inspector-layer dt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.inspector-layer dt span {
+  font-size: 0.75rem;
+  color: var(--secondary);
+  font-weight: 600;
+}
+.inspector-layer dd {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.875rem;
+  margin-top: 0.2rem;
+  overflow-wrap: anywhere;
+}
+.inspector-layer .field-changed {
+  background: var(--success-soft);
+  border-left: 3px solid var(--secondary);
+}
+.inspector-note {
+  padding: 0 1.2rem 1.2rem;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+}
+.event-explanation {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.3rem;
+  background: var(--network-bg);
+  color: var(--surface);
+  border-radius: var(--radius-md);
+  margin-top: 1rem;
+  min-height: 160px;
+}
+.event-explanation .eyebrow {
+  color: var(--network-accent);
+}
+.event-explanation h2 {
+  font-size: 1.1rem;
+  line-height: 1.45;
+  margin: 0.25rem 0 0.5rem;
+}
+.event-explanation p:last-child {
+  font-size: 0.875rem;
+  color: var(--network-muted);
+  line-height: 1.8;
+}
+.event-symbol {
+  font:
+    500 0.875rem var(--font-geist-mono),
+    monospace;
+  color: var(--network-accent);
+  border: 1px solid var(--network-border);
+  min-width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+}
+.event-error {
+  background: var(--warning-soft);
+  border: 1px solid var(--warning);
+  color: var(--foreground);
+}
+.event-error .eyebrow,
+.event-error .event-symbol,
+.event-error p:last-child {
+  color: var(--warning);
+}
+.event-error .event-symbol {
+  border-color: var(--warning);
+}
+.inspect-device-control {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 2rem 0 1rem;
+}
+.inspect-device-control p {
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+.device-inspector {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+}
+.subsection-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.subsection-heading h2 {
+  font-size: 1.25rem;
+  margin-top: 0.3rem;
+  letter-spacing: -0.03em;
+}
+.subsection-heading > span {
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+.device-kind {
+  text-transform: capitalize;
+  background: var(--surface-raised);
+  padding: 0.3rem 0.65rem;
+  border-radius: 4px;
+}
+.device-table-wrap {
+  overflow-x: auto;
+  margin-top: 1.2rem;
+}
+.device-table-wrap table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+.device-table-wrap caption {
+  font-weight: 550;
+  font-size: 0.875rem;
+  text-align: left;
+  padding-bottom: 0.7rem;
+}
+.device-table-wrap th,
+.device-table-wrap td {
+  font-size: 0.8125rem;
+  padding: 0.65rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+.device-table-wrap th {
+  font-weight: 550;
+}
+.device-table-wrap thead {
+  color: var(--muted);
+  background: var(--background);
+}
+.device-table-wrap td {
+  color: var(--muted);
+}
+.gateway-detail {
+  margin-top: 1rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.simulation-timeline {
+  margin-top: 2rem;
+}
+.simulation-timeline ol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  list-style: none;
+  gap: 0.55rem;
+}
+.simulation-timeline button {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+  text-align: left;
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  padding: 0.85rem 1rem;
+  min-height: 76px;
+  cursor: pointer;
+}
+.simulation-timeline button:hover {
+  background: var(--surface-raised);
+}
+.simulation-timeline .current-event {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+.simulation-timeline .timeline-index {
+  color: var(--accent);
+  font-size: 0.8125rem;
+}
+.simulation-timeline strong {
+  font-weight: 550;
+  font-size: 0.875rem;
+  display: block;
+}
+.simulation-timeline small {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+.simulation-timeline button > svg {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.simulation-errors {
+  border: 1px solid var(--warning);
+  border-radius: var(--radius-md);
+  background: var(--warning-soft);
+  color: var(--warning);
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+}
+.simulation-errors ul {
+  padding-left: 1.25rem;
+  margin-top: 0.6rem;
+}
+.lab-model-notes {
+  margin-top: 2rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+  color: var(--muted);
+}
+.lab-model-notes summary {
+  cursor: pointer;
+  min-height: 44px;
+  padding: 0.5rem 0;
+  color: var(--foreground);
+  font-weight: 550;
+  font-size: 0.875rem;
+}
+.lab-model-notes p {
+  font-size: 0.875rem;
+  line-height: 1.8;
+  margin: 0.75rem 0;
+}
+.playground-controls {
+  background: var(--surface);
+  padding: 1.3rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+  display: grid;
+  gap: 1rem;
+}
+.playground-palette {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+.playground-palette label {
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.875rem;
+  font-weight: 550;
+}
+.playground-controls .button {
+  font-size: 0.8125rem;
+}
+.playground-packet-fields {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+.playground-packet-fields label {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 550;
+  flex: 1;
+  min-width: 130px;
+}
+.playground-packet-fields .ttl-field {
+  max-width: 90px;
+  min-width: 80px;
+}
+.playground-packet-fields p {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  flex-basis: 100%;
+}
+.network-configuration {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-top: 2rem;
+  scroll-margin-top: 1rem;
+}
+.network-configuration > section {
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: 1.4rem;
+}
+.network-configuration h2 {
+  font-size: 1.2rem;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+}
+.network-configuration label {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 0.8rem 0;
+}
+.network-configuration fieldset {
+  border: 1px solid var(--border);
+  padding: 0.8rem 1rem;
+  margin: 1rem 0;
+  border-radius: var(--radius-sm);
+}
+.network-configuration legend {
+  font-size: 0.875rem;
+  padding: 0 0.3rem;
+  font-weight: 550;
+}
+.port-fields {
+  display: grid;
+  grid-template-columns: 1fr 90px;
+  gap: 0.7rem;
+}
+.port-fields label {
+  min-width: 0;
+}
+.network-configuration p {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.8;
+  margin: 0.5rem 0;
+}
+.configuration-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+.danger-button {
+  color: var(--danger);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.8rem;
+  min-height: 44px;
+  cursor: pointer;
+  font-size: 0.8125rem;
+}
+.route-editor {
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+  margin-top: 1.5rem;
+}
+.route-editor summary {
+  cursor: pointer;
+  font-size: 0.875rem;
+  min-height: 44px;
+  padding: 0.5rem 0;
+  font-weight: 550;
+}
+.route-editor li {
+  font-size: 0.8125rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--border);
+  list-style: none;
+  display: flex;
+  gap: 0.8rem;
+  justify-content: space-between;
+}
+.connection-divider {
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0;
+}
+.configuration-status {
+  color: var(--success);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+@media (max-width: 1050px) {
+  .simulation-main {
+    grid-template-columns: 1fr;
+  }
+  .packet-inspector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .inspector-heading,
+  .inspector-note {
+    grid-column: span 2;
+  }
+  .inspector-layer {
+    margin: 0.9rem;
+  }
+  .topology-canvas {
+    height: 520px;
+  }
+}
+@media (max-width: 700px) {
+  .simulation-timeline ol,
+  .network-configuration {
+    grid-template-columns: 1fr;
+  }
+  .lab-experiment {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .lab-experiment p {
+    margin-left: 0;
+  }
+  .lab-experiment select {
+    width: 100%;
+  }
+  .simulation-step-count {
+    margin-left: 0;
+  }
+  .playback-buttons {
+    flex-wrap: wrap;
+  }
+  .packet-inspector {
+    display: block;
+  }
+  .topology-canvas {
+    height: 450px;
+  }
+  .device-inspector {
+    padding: 1rem;
+  }
+  .event-explanation {
+    padding: 1rem;
+    gap: 0.7rem;
+  }
+  .playground-palette label {
+    width: 100%;
+    margin-right: 0;
+    flex-wrap: wrap;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .topology-packet {
+    animation: none;
+    offset-distance: 100%;
+  }
+  .react-flow__edge.animated .react-flow__edge-path {
+    animation: none;
+  }
+}
+
+.topology-device-heading {
+  flex-wrap: wrap;
+}
+.device-active-label {
+  flex-basis: 100%;
+}
