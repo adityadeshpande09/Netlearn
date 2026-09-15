@@ -54,3 +54,9 @@ Vitest/Testing Library cover observable logic and storage behavior. Playwright t
 ## Deployment
 
 The standard Next.js build is ready for an eventual Vercel deployment. No environment variables or platform-specific services are required. Deployment, pushes, and Git commits remain separate owner approvals. No Site is registered and no hosting manifest is present. See deployment.md for the reviewable release procedure.
+
+## Saved playgrounds (Week 2)
+
+A separate versioned playground repository stores named snapshots of topology, positions, packet endpoints, and TTL. Structural decoding bounds data and validates references without requiring a working simulation, so disconnected or incorrectly addressed experiments remain saveable. New snapshots have distinct names; existing snapshots are never silently overwritten. Each mutation reloads the latest library so it preserves other tabs' saved entries. Storage events refresh only the saved list, never the active canvas. Malformed/future records remain untouched; unavailable/full storage reports failure without pretending to save.
+
+The client library uses useSyncExternalStore with a stable server snapshot. Explicit loads restore configuration together and reset playback through the workspace revision. Newly generated device IDs and MACs are checked against loaded data. Native confirmation dialogs protect workspace replacement and deletion; unapplied device and route drafts disable snapshot saving until applied. No dependency, account, environment variable, or remote service is needed for this unit.

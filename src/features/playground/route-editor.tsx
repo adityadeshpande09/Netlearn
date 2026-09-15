@@ -4,9 +4,11 @@ import { calculateSubnet } from "@/domain/networking/subnet";
 export function RouteEditor({
   router,
   onSave,
+  onDraftChange,
 }: {
   router: RouterDevice;
   onSave: (device: NetworkDevice) => void;
+  onDraftChange: (dirty: boolean) => void;
 }) {
   const addButton = useRef<HTMLButtonElement>(null);
   const [error, setError] = useState("");
@@ -43,6 +45,7 @@ export function RouteEditor({
         ))}
       </ul>
       <form
+        onChange={() => onDraftChange(true)}
         onSubmit={(event) => {
           event.preventDefault();
           const form = new FormData(event.currentTarget);
@@ -65,6 +68,8 @@ export function RouteEditor({
             ],
           });
           setError("");
+          event.currentTarget.reset();
+          onDraftChange(false);
         }}
       >
         <label>
@@ -105,6 +110,17 @@ export function RouteEditor({
           type="submit"
         >
           Add static route
+        </button>
+        <button
+          type="button"
+          className="button button-secondary"
+          onClick={(event) => {
+            event.currentTarget.form?.reset();
+            setError("");
+            onDraftChange(false);
+          }}
+        >
+          Clear route draft
         </button>
       </form>
     </details>

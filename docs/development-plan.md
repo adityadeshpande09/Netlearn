@@ -1,8 +1,8 @@
-# Week 1 implementation scope
+# NetLearn development plan
 
 On September 10 the owner authorized completion of all Week 1 as one reviewable batch. This supersedes earlier daily implementation pauses. The owner later separately approved the initial Week 1 commit and push to the public Netlearn repository. Website deployment remains a separate step.
 
-## Implemented scope
+## Week 1 implemented scope
 
 1. Foundation: Next.js, strict TypeScript, package management, code checks, project conventions, responsive shell, design tokens, and 404 recovery.
 2. Learning: purposeful animated homepage, typed curriculum, five original lessons, diagrams, retryable prediction questions, hints, completion, and local progress.
@@ -20,3 +20,13 @@ No backend/database, authentication, AI tutor, multiplayer, dynamic routing prot
 ## Review and commit
 
 The first application commit includes the entire Week 1 app and follows the repository's initial README commit. Present the exact files, architecture decisions, dependency changes, checks and limitations in a dated review report before asking for approval. Do not stage until approved. A commit approval covers one stated commit only; it does not authorize a push, publication, or Week 2 work.
+
+## Week 2
+
+The owner requested saved playgrounds, accounts with synced progress, and a more detailed Packet Journey. Work proceeds in reviewable units; this request does not authorize staging, commits, pushes, or website deployment.
+
+1. **Current unit — saved playgrounds:** named browser snapshots, safe loading/deletion, restored device/cable/layout/packet settings, validation of stored data, clear storage-failure feedback, and preservation of unapplied device drafts. No account is required.
+2. **Accounts and synced progress:** Supabase cookie authentication, guest learning preserved, explicit import of local completion, per-user completion rows, access policies, and cross-device synchronization. A project URL and publishable key plus database setup are required for real integration testing. Never request or expose a service-role key.
+3. **Packet details:** actual typed Ethernet, ARP, IPv4, and ICMP header snapshots, protocol/layer explanations, field sizes, and change highlighting. Distinguish a pending IPv4 packet from ARP traffic and use correct next-hop addresses. Any displayed checksum must be computed from the modeled bytes.
+
+For each unit, implement and validate, present the exact proposed files and a short commit message, then wait for the owner's approval before committing or starting the next unit.

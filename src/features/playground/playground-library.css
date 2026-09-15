@@ -1,0 +1,121 @@
+.playground-library {
+  padding: 1.3rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+.library-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.library-heading h2 {
+  font-size: 1.2rem;
+  letter-spacing: -0.03em;
+}
+.library-count {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+.library-description,
+.library-note {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.8;
+  margin: 0.75rem 0 1rem;
+}
+.library-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.2rem;
+}
+.library-controls > * {
+  min-width: 0;
+}
+.library-controls label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 550;
+  margin-bottom: 0.5rem;
+}
+.library-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+.library-action-row input,
+.library-action-row select {
+  flex: 1 1 220px;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--foreground);
+  font-size: 0.875rem;
+}
+.library-action-row .button,
+.library-dialog-actions .button {
+  font-size: 0.8125rem;
+}
+.library-action-row .danger-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.library-status {
+  font-size: 0.875rem;
+  color: var(--success);
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.library-status:not(:empty) {
+  margin-top: 1rem;
+}
+.playground-library .form-error {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+.library-dialog {
+  margin: auto;
+  width: min(460px, calc(100% - 2rem));
+  max-height: calc(100% - 2rem);
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--foreground);
+  box-shadow: 0 20px 80px #142b4540;
+}
+.library-dialog::backdrop {
+  background: #132c4666;
+}
+.library-dialog h2 {
+  font-size: 1.3rem;
+  letter-spacing: -0.03em;
+}
+.library-dialog p {
+  margin: 1rem 0 1.5rem;
+  font-size: 0.875rem;
+  line-height: 1.8;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.library-dialog-actions {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+@media (max-width: 700px) {
+  .library-action-row input,
+  .library-action-row select {
+    flex-basis: 100%;
+  }
+}

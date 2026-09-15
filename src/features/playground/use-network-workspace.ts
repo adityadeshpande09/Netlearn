@@ -1,10 +1,6 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { Connection } from "@xyflow/react";
-import {
-  localTopology,
-  makeDevice,
-  routedTopology,
-} from "@/domain/networking/scenarios";
+import { localTopology, routedTopology } from "@/domain/networking/scenarios";
 import type { Endpoint, NetworkDevice } from "@/domain/networking/types";
 import { endpointKey } from "@/domain/networking/topology";
 import {
@@ -12,10 +8,18 @@ import {
   type Point,
   type Positions,
 } from "@/features/network/topology-layout";
+import type { WorkspaceSnapshot } from "@/repositories/playgrounds/workspace-snapshot";
+import { nextCableId, nextWorkspaceDevice } from "./workspace-identifiers";
+
 export function useNetworkWorkspace() {
   const [topology, setTopology] = useState(routedTopology);
   const [positions, setPositions] = useState<Positions>(initialPositions);
-  const [selectedId, setSelectedId] = useState("pc-a");
+  const [selectedId, selectDevice] = useState("pc-a");
+  const [hasDraft, setHasDraft] = useState(false);
+  function setSelectedId(id: string) {
+    if (id !== selectedId) setHasDraft(false);
+    selectDevice(id);
+  }
   const [sourceId, setSourceId] = useState("pc-a");
   const [destinationId, setDestinationId] = useState("pc-b");
   const [ttl, setTtl] = useState(64);
@@ -23,14 +27,34 @@ export function useNetworkWorkspace() {
   const [preset, setPreset] = useState("routed");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const sequence = useRef(6);
   const selected = topology.devices.find((device) => device.id === selectedId);
   const hosts = topology.devices.filter((device) => device.kind === "host");
   const scenario = useMemo(
     () => ({ ...topology, sourceId, destinationId, ttl }),
     [topology, sourceId, destinationId, ttl],
   );
+  const workspace: WorkspaceSnapshot = {
+    topology,
+    positions,
+    sourceId,
+    destinationId,
+    ttl,
+  };
+  function loadWorkspace(saved: WorkspaceSnapshot) {
+    setHasDraft(false);
+    setTopology(saved.topology);
+    setPositions(saved.positions);
+    setSourceId(saved.sourceId);
+    setDestinationId(saved.destinationId);
+    setTtl(saved.ttl);
+    setSelectedId(saved.sourceId || saved.topology.devices[0]?.id || "");
+    setPreset("saved");
+    setRevision((current) => current + 1);
+    setError("");
+    setMessage("Saved network loaded. Playback starts from the first step.");
+  }
   function loadPreset(value: string) {
+    setHasDraft(false);
     setPreset(value);
     setRevision((current) => current + 1);
     setTopology(
@@ -41,6 +65,7 @@ export function useNetworkWorkspace() {
           : routedTopology(),
     );
     setPositions(initialPositions);
+    setTtl(64);
     setSelectedId(value === "blank" ? "" : "pc-a");
     setSourceId(value === "blank" ? "" : "pc-a");
     setDestinationId(value === "blank" ? "" : "pc-b");
@@ -49,7 +74,7 @@ export function useNetworkWorkspace() {
   }
   function addDevice(kind: NetworkDevice["kind"]) {
     if (topology.devices.length >= 8) return;
-    const device = makeDevice(kind, sequence.current++);
+    const device = nextWorkspaceDevice(topology, kind);
     setTopology({ ...topology, devices: [...topology.devices, device] });
     setPositions({
       ...positions,
@@ -94,6 +119,11 @@ export function useNetworkWorkspace() {
           link.target.deviceId !== selectedId,
       ),
     });
+    setPositions(
+      Object.fromEntries(
+        Object.entries(positions).filter(([id]) => id !== selectedId),
+      ),
+    );
     setSelectedId(devices[0]?.id ?? "");
     if (sourceId === selectedId) setSourceId("");
     if (destinationId === selectedId) setDestinationId("");
@@ -116,10 +146,7 @@ export function useNetworkWorkspace() {
     }
     setTopology({
       ...topology,
-      links: [
-        ...topology.links,
-        { id: "cable-" + sequence.current++, source, target },
-      ],
+      links: [...topology.links, { id: nextCableId(topology), source, target }],
     });
     setMessage("Cable connected. The journey has been recalculated.");
     setError("");
@@ -144,6 +171,10 @@ export function useNetworkWorkspace() {
   );
 
   return {
+    workspace,
+    loadWorkspace,
+    hasDraft,
+    setHasDraft,
     revision,
     topology,
     setTopology,

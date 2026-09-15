@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Save, Trash2 } from "lucide-react";
 import type { NetworkDevice } from "@/domain/networking/types";
 import { RouteEditor } from "./route-editor";
@@ -5,16 +6,24 @@ export function DeviceEditor({
   device,
   onSave,
   onRemove,
+  onDraftChange,
 }: {
   device: NetworkDevice;
   onSave: (device: NetworkDevice) => void;
   onRemove: () => void;
+  onDraftChange: (dirty: boolean) => void;
 }) {
+  const drafts = useRef({ configuration: false, route: false });
+  function markDraft(field: "configuration" | "route", dirty: boolean) {
+    drafts.current[field] = dirty;
+    onDraftChange(drafts.current.configuration || drafts.current.route);
+  }
   return (
     <section>
       <p className="eyebrow">CONFIGURE A DEVICE</p>
       <h2>{device.name}</h2>
       <form
+        onChange={() => markDraft("configuration", true)}
         onSubmit={(event) => {
           event.preventDefault();
           const form = new FormData(event.currentTarget);
@@ -37,6 +46,7 @@ export function DeviceEditor({
             else delete updated.defaultGateway;
           }
           onSave(updated);
+          markDraft("configuration", false);
         }}
       >
         <label>
@@ -106,7 +116,11 @@ export function DeviceEditor({
         </div>
       </form>
       {device.kind === "router" && (
-        <RouteEditor router={device} onSave={onSave} />
+        <RouteEditor
+          router={device}
+          onSave={onSave}
+          onDraftChange={(dirty) => markDraft("route", dirty)}
+        />
       )}
     </section>
   );

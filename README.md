@@ -28,7 +28,7 @@ Open the local URL printed by Next.js. No environment variables, account, databa
 | /tools/subnet         | IPv4 /0–/32 arithmetic, binary boundary, and paginated splitting          |
 | /playground           | Add up to eight devices, edit interfaces/routes, connect cables, simulate |
 
-The Playground has both drag-and-connect controls and equivalent native forms. Its topology lasts until reload. Lesson completion persists in this browser and origin when local storage is available; otherwise it lasts in tab memory until reload. See [model boundaries](docs/model-limitations.md).
+The Playground has both drag-and-connect controls and equivalent native forms. Save named Playground snapshots in this browser to reopen devices, cables, layout, and packet settings after reload. Unfinished networks can be saved; unapplied device/route form changes must be applied first. Snapshots are separate versions rather than automatic saves. Up to 20 snapshots are supported; clearing browser storage removes them. Lesson completion persists in this browser and origin when local storage is available; otherwise it lasts in tab memory until reload. See [model boundaries](docs/model-limitations.md).
 
 ## Validate
 

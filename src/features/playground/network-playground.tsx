@@ -1,11 +1,16 @@
 "use client";
 import { Laptop, Network, Router } from "lucide-react";
 import { SimulationSession } from "@/features/network/simulation-session";
+import { PlaygroundLibrary } from "./playground-library";
 import { DeviceEditor } from "./device-editor";
 import { CableEditor } from "./cable-editor";
 import { useNetworkWorkspace } from "./use-network-workspace";
 export function NetworkPlayground() {
   const {
+    workspace,
+    loadWorkspace,
+    hasDraft,
+    setHasDraft,
     revision,
     topology,
     setTopology,
@@ -35,6 +40,11 @@ export function NetworkPlayground() {
   } = useNetworkWorkspace();
   return (
     <>
+      <PlaygroundLibrary
+        workspace={workspace}
+        hasDraft={hasDraft}
+        onLoad={loadWorkspace}
+      />
       <section className="playground-controls" aria-label="Network setup">
         <div className="playground-palette">
           <label>
@@ -43,6 +53,11 @@ export function NetworkPlayground() {
               value={preset}
               onChange={(event) => loadPreset(event.target.value)}
             >
+              {preset === "saved" && (
+                <option value="saved" disabled>
+                  Saved network
+                </option>
+              )}
               <option value="routed">Two networks & a router</option>
               <option value="local">Two computers on a LAN</option>
               <option value="blank">Empty workspace</option>
@@ -117,7 +132,7 @@ export function NetworkPlayground() {
           </a>
           <p>
             Up to 8 devices. Each run starts with empty learning tables. This
-            workspace lasts until you reload.
+            workspace lasts until you reload unless you save a snapshot above.
           </p>
         </div>
       </section>
@@ -130,6 +145,7 @@ export function NetworkPlayground() {
         {message}
       </p>
       <SimulationSession
+        key={revision}
         scenario={scenario}
         canvas={{
           positions,
@@ -145,6 +161,7 @@ export function NetworkPlayground() {
             <DeviceEditor
               key={revision + ":" + selected.id}
               device={selected}
+              onDraftChange={setHasDraft}
               onSave={saveDevice}
               onRemove={removeDevice}
             />

@@ -10,7 +10,7 @@ The app sends no real network traffic. Each trace starts with empty ARP/MAC tabl
 - Routers preserve IP endpoints, decrement TTL, and create a new outgoing Ethernet header. Equal-prefix route ties use stable input order, with connected routes first; metrics and administrative distance are outside the model.
 - No reply path, NAT, DHCP, IPv6, dynamic routing, STP, packet queues/loss/corruption, fragmentation, checksum computation, or real protocol timing.
 - Playback speed changes presentation only. Reset starts the same deterministic trace. Changing configuration regenerates it.
-- Canvas positions and topology are temporary and disappear on reload. Device/cable forms edit the same state as the canvas.
+- Unsaved canvas changes disappear on reload. Week 2 adds up to 20 named snapshots in the current browser/origin, including positions, topology, source/destination and TTL. Reopening replaces the workspace after confirmation; deleting a snapshot leaves the open workspace intact. Device/route form changes must be applied before saving. Snapshots do not sync across devices; clearing browser data removes them.
 
 ## Subnet arithmetic
 
