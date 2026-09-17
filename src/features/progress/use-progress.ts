@@ -1,80 +1,43 @@
 "use client";
-import { useSyncExternalStore } from "react";
 import type { LessonSlug } from "@/content/model";
 import {
-  createProgressRepository,
-  normalizeProgress,
-  progressKey,
-  type ProgressData,
-} from "@/repositories/progress/progress-repository";
-interface Snapshot extends ProgressData {
-  ready: boolean;
-}
-const empty: Snapshot = { completed: [], persistence: "saved", ready: false };
-let snapshot: Snapshot = empty;
-const listeners = new Set<() => void>();
-function repository() {
-  try {
-    return createProgressRepository(window.localStorage);
-  } catch {
-    return createProgressRepository();
-  }
-}
-function publish(next: Snapshot) {
-  if (
-    next.ready === snapshot.ready &&
-    next.persistence === snapshot.persistence &&
-    next.completed.join() === snapshot.completed.join()
-  )
-    return;
-  snapshot = next;
-  listeners.forEach((listener) => listener());
-}
-function refresh() {
-  const loaded = repository().load();
-  // Keep this tab's unsaved work when a route change reconnects subscribers.
-  const hasUnsavedProgress = snapshot.persistence === "memory";
-  publish({
-    completed: hasUnsavedProgress
-      ? normalizeProgress([...snapshot.completed, ...loaded.completed])
-      : loaded.completed,
-    persistence: hasUnsavedProgress ? "memory" : loaded.persistence,
-    ready: true,
-  });
-}
-function handleStorage(event: StorageEvent) {
-  if (event.key === progressKey || event.key === null) refresh();
-}
-function subscribe(listener: () => void) {
-  const first = listeners.size === 0;
-  listeners.add(listener);
-  if (first) {
-    window.addEventListener("storage", handleStorage);
-    refresh();
-  }
-  return () => {
-    listeners.delete(listener);
-    if (!listeners.size) window.removeEventListener("storage", handleStorage);
-  };
-}
-function getSnapshot() {
-  return snapshot;
-}
-function getServerSnapshot() {
-  return empty;
-}
+  getAccountRuntime,
+  useAccount,
+  useAccountProgress,
+} from "@/features/account/use-account";
+import { completeGuestLesson, useGuestProgress } from "./use-guest-progress";
 export function completeLesson(slug: LessonSlug) {
-  const repo = repository();
-  const persisted = repo.load();
-  const completed = normalizeProgress([
-    ...snapshot.completed,
-    ...persisted.completed,
-    slug,
-  ]);
-  // Do not overwrite malformed or future-version data; this tab can still progress.
-  const saved = persisted.persistence === "saved" && repo.save(completed);
-  publish({ completed, persistence: saved ? "saved" : "memory", ready: true });
+  const runtime = getAccountRuntime();
+  const auth = runtime.auth.getSnapshot();
+  if (auth.user) {
+    void runtime.progress.complete(slug);
+  } else if (auth.status === "guest" || auth.status === "disabled")
+    completeGuestLesson(slug);
 }
 export function useProgress() {
-  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const guest = useGuestProgress();
+  const auth = useAccount();
+  const account = useAccountProgress();
+  if (auth.user)
+    return {
+      completed: account.completed,
+      persistence: "saved" as const,
+      ready: account.userId === auth.user.id,
+      scope: "account" as const,
+      syncStatus: account.status,
+      pendingCount: account.pendingCount,
+    };
+  return {
+    ...guest,
+    ready:
+      guest.ready && (auth.status === "guest" || auth.status === "disabled"),
+    scope: "browser" as const,
+    syncStatus:
+      auth.status === "error"
+        ? ("error" as const)
+        : auth.status === "loading"
+          ? ("loading" as const)
+          : ("idle" as const),
+    pendingCount: 0,
+  };
 }

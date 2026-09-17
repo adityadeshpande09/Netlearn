@@ -11,13 +11,14 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-Open the local URL printed by Next.js. No environment variables, account, database, or API keys are required.
+Open the local URL printed by Next.js. Guest learning and browser saves need no configuration. Optional account sign-in and synced lesson progress require a Supabase project; see [account setup](docs/accounts-setup.md). Without its public settings, the account page clearly shows that sign-in is unavailable.
 
 ## Explore
 
 | Route                 | What works                                                                |
 | --------------------- | ------------------------------------------------------------------------- |
 | /                     | Animated concept preview, learning path introduction, links to all tools  |
+| /account              | Email-code sign-in, explicit guest import, and synced lesson progress     |
 | /learn                | Five-lesson curriculum and saved completion                               |
 | /learn/network-basics | Networks, LAN/WAN, and service roles                                      |
 | /learn/mac-vs-ip      | Local addresses, IP endpoints, and prefixes                               |
@@ -54,7 +55,9 @@ pnpm check runs lint, type checking, unit tests, and build. pnpm format formats 
 - src/features/network: shared playback, packet/device inspection, and lazy React Flow canvas.
 - src/features/learning, packet-journey, subnet, playground: focused feature interfaces.
 - src/repositories/progress: versioned storage interface and runtime validation.
-- src/features/progress: stable React external-store subscription.
+- src/features/progress: separate guest and account stores, retryable completion synchronization.
+- src/features/account and src/lib/supabase: verified account state, email-code forms, and cookie clients.
+- supabase/migrations and supabase/tests: append-only completion schema, owner access policies, and rollback database tests.
 - src/test and tests/e2e: domain/component and production browser tests.
 - docs: architecture, sources, implementation scope, model boundaries, and deployment instructions.
 

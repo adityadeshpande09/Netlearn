@@ -1,6 +1,6 @@
 # NetLearn architecture
 
-The Week 1 app combines original lessons, local progress, and interactive teaching tools. It has ten user-facing routes, plus custom 404 recovery, and no backend or remote data service.
+The Week 1 app combines original lessons, local progress, and interactive teaching tools. It has eleven user-facing routes, plus custom 404 recovery. Supabase optionally provides email-code authentication and account lesson progress; guest learning and playground saves work without it.
 
 ## Stack and rendering
 
@@ -43,7 +43,7 @@ IPv4 parsing accepts four strict decimal octets; arithmetic uses safe JavaScript
 
 ## Progress
 
-A stable useSyncExternalStore subscription avoids browser storage reads during server rendering. Versioned completion records are validated and normalized. Invalid/future records are preserved. Failed reads or writes fall back to tab memory, retaining progress across client navigation; a full reload loses that fallback. Storage events synchronize successful writes across tabs on the same origin. No personal data or quiz-answer history is collected.
+A stable useSyncExternalStore subscription avoids browser storage reads during server rendering. Versioned completion records are validated and normalized. Invalid/future records are preserved. Failed reads or writes fall back to tab memory, retaining progress across client navigation; a full reload loses that fallback. Storage events synchronize successful writes across tabs on the same origin. Guest progress stores no personal data or quiz-answer history. With accounts configured, Supabase Auth receives the sign-in email and manages session cookies; the progress table stores user ID, lesson slug, and completion timestamp.
 
 ## Design and accessibility
 
@@ -53,10 +53,18 @@ Vitest/Testing Library cover observable logic and storage behavior. Playwright t
 
 ## Deployment
 
-The standard Next.js build is ready for an eventual Vercel deployment. No environment variables or platform-specific services are required. Deployment, pushes, and Git commits remain separate owner approvals. No Site is registered and no hosting manifest is present. See deployment.md for the reviewable release procedure.
+The standard Next.js build is ready for an eventual Vercel deployment. Guest mode requires no environment variables. Accounts require the two public Supabase settings, the completion migration, and email configuration described in accounts-setup.md. Deployment, pushes, and Git commits remain separate owner approvals. No Site is registered and no hosting manifest is present. See deployment.md for the reviewable release procedure.
 
 ## Saved playgrounds (Week 2)
 
 A separate versioned playground repository stores named snapshots of topology, positions, packet endpoints, and TTL. Structural decoding bounds data and validates references without requiring a working simulation, so disconnected or incorrectly addressed experiments remain saveable. New snapshots have distinct names; existing snapshots are never silently overwritten. Each mutation reloads the latest library so it preserves other tabs' saved entries. Storage events refresh only the saved list, never the active canvas. Malformed/future records remain untouched; unavailable/full storage reports failure without pretending to save.
 
 The client library uses useSyncExternalStore with a stable server snapshot. Explicit loads restore configuration together and reset playback through the workspace revision. Newly generated device IDs and MACs are checked against loaded data. Native confirmation dialogs protect workspace replacement and deletion; unapplied device and route drafts disable snapshot saving until applied. No dependency, account, environment variable, or remote service is needed for this unit.
+
+## Accounts and synced progress (Week 2)
+
+The browser uses @supabase/ssr 0.12.7 with @supabase/supabase-js 2.116.0 for cookie-backed email-code sessions. The account store verifies identity with getUser, immediately clears previous identities on account changes, and ignores stale asynchronous results. The proxy refreshes cookie sessions through getClaims on account/learning routes and prevents shared caching of cookie-bearing responses. Public content stays prerendered; no personal account data is rendered into cached HTML. Database row policies, not client state, authorize every progress read and insert.
+
+The existing synchronous guest repository is preserved separately. A pure asynchronous account store unions confirmed rows with pending completions and inserts only new rows, ignoring duplicates. It never auto-imports browser progress. Sign-out/account changes clear account memory and return to untouched guest progress. Unconfirmed account completions stay in tab memory, with visible failure/retry feedback and a leave-page warning while changes are pending. Refresh happens on login, window focus, reconnect, and explicit retry. There is no realtime subscription or cloud playground storage in this unit.
+
+Unit tests cover stale sessions, account changes, offline retries, duplicate writes, and response validation. A separate browser suite intercepts Supabase requests to exercise the real client and screens; it does not verify actual email delivery, token signatures, or the remote database. SQL tests and a real two-account/two-device check remain required before release. See accounts-setup.md for setup and exact validation boundaries.

@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import type { Lesson } from "@/content/model";
 import { useProgress } from "@/features/progress/use-progress";
+import { ProgressStatus } from "@/features/progress/progress-status";
 export type LessonSummary = Pick<
   Lesson,
   "slug" | "order" | "title" | "summary" | "minutes"
@@ -97,11 +98,7 @@ export function LearningDashboard({ lessons }: { lessons: LessonSummary[] }) {
           </p>
           <div className="progress-save">
             <ShieldCheck size={17} />
-            <span>
-              {progress.persistence === "memory"
-                ? "Progress is kept in this tab only."
-                : "Saved on this browser. No account needed."}
-            </span>
+            <ProgressStatus />
           </div>
         </section>
       </div>

@@ -1888,3 +1888,27 @@ progress::-moz-progress-bar {
 .footer-inner {
   flex-wrap: wrap;
 }
+
+.progress-status-copy {
+  display: grid;
+  gap: 0.45rem;
+}
+.text-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: fit-content;
+  min-height: 36px;
+  border: 0;
+  background: none;
+  padding: 0.15rem 0;
+  font: inherit;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.text-action:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

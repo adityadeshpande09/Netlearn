@@ -25,8 +25,8 @@ The first application commit includes the entire Week 1 app and follows the repo
 
 The owner requested saved playgrounds, accounts with synced progress, and a more detailed Packet Journey. Work proceeds in reviewable units; this request does not authorize staging, commits, pushes, or website deployment.
 
-1. **Current unit — saved playgrounds:** named browser snapshots, safe loading/deletion, restored device/cable/layout/packet settings, validation of stored data, clear storage-failure feedback, and preservation of unapplied device drafts. No account is required.
-2. **Accounts and synced progress:** Supabase cookie authentication, guest learning preserved, explicit import of local completion, per-user completion rows, access policies, and cross-device synchronization. A project URL and publishable key plus database setup are required for real integration testing. Never request or expose a service-role key.
+1. **Saved playgrounds — committed locally:** named browser snapshots, safe loading/deletion, restored device/cable/layout/packet settings, validation of stored data, clear storage-failure feedback, and preservation of unapplied device drafts. No account is required.
+2. **Current unit — accounts and synced progress:** Supabase cookie authentication, guest learning preserved, explicit import of local completion, per-user completion rows, access policies, and cross-device synchronization. A project URL and publishable key plus database setup are required for real integration testing. Never request or expose a service-role key.
 3. **Packet details:** actual typed Ethernet, ARP, IPv4, and ICMP header snapshots, protocol/layer explanations, field sizes, and change highlighting. Distinguish a pending IPv4 packet from ARP traffic and use correct next-hop addresses. Any displayed checksum must be computed from the modeled bytes.
 
 For each unit, implement and validate, present the exact proposed files and a short commit message, then wait for the owner's approval before committing or starting the next unit.

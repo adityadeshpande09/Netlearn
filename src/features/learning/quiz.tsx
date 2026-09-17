@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { ArrowRight, Check, CircleHelp, Lightbulb } from "lucide-react";
 import type { LessonSlug, QuizQuestion } from "@/content/model";
 import { completeLesson, useProgress } from "@/features/progress/use-progress";
+import { ProgressStatus } from "@/features/progress/progress-status";
 import { useReducedMotionPreference } from "@/components/motion/use-reduced-motion-preference";
 type Result = "correct" | "incorrect" | null;
 export function Quiz({
@@ -138,6 +139,13 @@ export function Quiz({
                 : "Back to your learning path"}{" "}
               <ArrowRight size={16} />
             </Link>
+          )}
+          {(progress.scope === "account" ||
+            progress.syncStatus === "error" ||
+            progress.syncStatus === "loading") && (
+            <div className="storage-notice">
+              <ProgressStatus />
+            </div>
           )}
           {progress.persistence === "memory" && (
             <p className="storage-notice">

@@ -55,8 +55,8 @@ export function SiteHeader() {
             </Link>
           ))}
         </nav>
-        <Link className="button button-small header-cta" href="/learn">
-          Start learning <ArrowUpRight size={16} />
+        <Link className="button button-small header-cta" href="/account">
+          Your account <ArrowUpRight size={16} />
         </Link>
         <button
           ref={trigger}
@@ -96,6 +96,13 @@ export function SiteHeader() {
               {label}
             </Link>
           ))}
+          <Link
+            href="/account"
+            onClick={close}
+            aria-current={pathname === "/account" ? "page" : undefined}
+          >
+            Your account
+          </Link>
         </nav>
       )}
     </header>

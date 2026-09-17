@@ -16,6 +16,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@supabase/ssr": "0.12.7",
+    "@supabase/supabase-js": "2.116.0",
     "@xyflow/react": "12.11.6",
     "lucide-react": "1.43.0",
     "motion": "13.2.0",

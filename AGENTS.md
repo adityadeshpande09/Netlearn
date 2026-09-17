@@ -6,7 +6,7 @@ Work in small, reviewable units following `docs/architecture.md` and
 `docs/development-plan.md`. The owner explicitly authorized completion of all Week 1 on September 10.
 Complete the foundation, five lessons, Packet Journey, Subnet Visualizer,
 Network Playground, local progress, and full validation as one reviewable batch.
-Week 1 is committed and pushed. The owner has started Week 2, requesting saved playgrounds, accounts with synced progress, and more detailed packet headers and protocol explanations. Implement saved playgrounds as the first reviewable unit, then follow docs/development-plan.md. Future commits and pushes still require explicit approval.
+Week 1 is committed and pushed. The owner has started Week 2, requesting saved playgrounds, accounts with synced progress, and more detailed packet headers and protocol explanations. Saved playgrounds are committed locally. Implement accounts and synced progress as the current reviewable unit, then follow docs/development-plan.md. Future commits and pushes still require explicit approval.
 
 ## Git approval and communication
 
