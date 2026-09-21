@@ -41,7 +41,11 @@ export function PacketJourney() {
           group of switches, empty ARP and MAC tables at the start, directly
           connected routes, and one forwarding router. ARP broadcasts stay
           local. Switches learn source MAC addresses. The router changes the
-          Ethernet header and TTL while preserving the IP endpoints.
+          Ethernet header, TTL, and IPv4 header checksum while preserving the IP
+          endpoints and ICMP message. Expand the packet inspector to see field
+          sizes, explanations, and hexadecimal bytes. The fixed payload is
+          “NetLearn”; both IPv4 and ICMP checksums are computed from the modeled
+          bytes.
         </p>
         <p>
           This is a teaching model. It does not send real network traffic or

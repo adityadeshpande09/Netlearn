@@ -1,4 +1,5 @@
 import { sameSubnet } from "./ipv4";
+import { createArpHeader, createPacketHeaders } from "./packet-headers";
 import {
   broadcastHops,
   deviceById,
@@ -10,6 +11,7 @@ import {
 } from "./topology";
 import type {
   ArpEntry,
+  ArpHeader,
   ChangedField,
   EthernetHeader,
   IPv4Packet,
@@ -57,6 +59,7 @@ export function simulatePacket(scenario: SimulationScenario): SimulationResult {
   };
   const events: SimulationEvent[] = [];
   let frame: EthernetHeader | null = null;
+  let arpHeader: ArpHeader | null = null;
   const arp = new Map<string, ArpEntry[]>();
   const mac = new Map<string, MacEntry[]>();
   const snapshot = (): TableSnapshot => ({
@@ -89,6 +92,18 @@ export function simulatePacket(scenario: SimulationScenario): SimulationResult {
       explanation,
       packet: { ...packet },
       frame: frame ? { ...frame } : null,
+      headers: createPacketHeaders({
+        packet,
+        frame,
+        arp: arpHeader,
+        frameContext:
+          frame === null
+            ? "none"
+            : action.type === "dropped" ||
+                (action.type === "arp" && action.phase === "cached")
+              ? "last"
+              : "current",
+      }),
       tables: snapshot(),
       changed,
       ...(linkId ? { linkId } : {}),
@@ -232,6 +247,7 @@ export function simulatePacket(scenario: SimulationScenario): SimulationResult {
       }
     } else if (current.kind === "router") {
       frame = null;
+      arpHeader = null;
       emit(
         { type: "frame", phase: "removed" },
         current,
@@ -271,7 +287,7 @@ export function simulatePacket(scenario: SimulationScenario): SimulationResult {
         "Decrement TTL",
         "The router reduces TTL by one before forwarding. Source and destination IP addresses stay the same in this example without NAT.",
         undefined,
-        ["ttl"],
+        ["ttl", "ipv4Checksum"],
       );
       if (packet.ttl === 0)
         return drop(
@@ -302,6 +318,14 @@ export function simulatePacket(scenario: SimulationScenario): SimulationResult {
         destinationMac: "ff:ff:ff:ff:ff:ff",
         payload: "arp",
       };
+      arpHeader = createArpHeader({
+        operation: 1,
+        senderMac: outgoing.macAddress,
+        senderIp: outgoing.ipAddress!,
+        // RFC 826 leaves an unresolved target hardware address unspecified.
+        targetMac: "00:00:00:00:00:00",
+        targetIp: nextHopIp,
+      });
       emit(
         { type: "arp", phase: "request" },
         current,
@@ -345,6 +369,13 @@ export function simulatePacket(scenario: SimulationScenario): SimulationResult {
         destinationMac: outgoing.macAddress,
         payload: "arp",
       };
+      arpHeader = createArpHeader({
+        operation: 2,
+        senderMac: targetPort.macAddress,
+        senderIp: targetPort.ipAddress!,
+        targetMac: outgoing.macAddress,
+        targetIp: outgoing.ipAddress!,
+      });
       emit(
         { type: "arp", phase: "reply" },
         target,
@@ -379,6 +410,7 @@ export function simulatePacket(scenario: SimulationScenario): SimulationResult {
       destinationMac: targetPort.macAddress,
       payload: "ipv4",
     };
+    arpHeader = null;
     emit(
       { type: "frame", phase: routed ? "reencapsulated" : "created" },
       current,

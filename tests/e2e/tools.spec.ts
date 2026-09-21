@@ -29,7 +29,9 @@ test("packet journey exposes routing, changing headers, and meaningful failure s
     "Packet delivered to PC-B",
   );
   await expect(
-    page.locator(".packet-inspector .ip-layer dd").last(),
+    page.locator(
+      '.packet-inspector .ip-layer [data-field="TTL"] .packet-field-value',
+    ),
   ).toHaveText("63");
   await page.getByLabel("Inspect a device").selectOption("router-r1");
   await expect(

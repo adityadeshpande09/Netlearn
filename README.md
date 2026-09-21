@@ -31,6 +31,8 @@ Open the local URL printed by Next.js. Guest learning and browser saves need no 
 
 The Playground has both drag-and-connect controls and equivalent native forms. Save named Playground snapshots in this browser to reopen devices, cables, layout, and packet settings after reload. Unfinished networks can be saved; unapplied device/route form changes must be applied first. Snapshots are separate versions rather than automatic saves. Up to 20 snapshots are supported; clearing browser storage removes them. Lesson completion persists in this browser and origin when local storage is available; otherwise it lasts in tab memory until reload. See [model boundaries](docs/model-limitations.md).
 
+Packet Journey and Playground share a detailed inspector for Ethernet, ARP, IPv4, and ICMP. Expand a layer for field sizes, explanations, and hexadecimal bytes. ARP exchanges stay separate from the waiting IP packet; router steps highlight TTL and checksum changes. IPv4 and ICMP checksums are calculated from the modeled headers and payload. This remains an educational simulation, not live packet capture.
+
 ## Validate
 
 ```sh

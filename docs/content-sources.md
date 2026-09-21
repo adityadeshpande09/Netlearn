@@ -42,4 +42,16 @@ All five entries use the requested field names, ordered slugs/titles, three obje
 - [RFC 3986, section 3.2.2](https://www.rfc-editor.org/rfc/rfc3986.html#section-3.2.2): strict four-octet IPv4 textual grammar used for input validation.
 - [React Flow handles](https://reactflow.dev/learn/customization/handles) and [accessibility](https://reactflow.dev/learn/advanced-use/accessibility): distinct port IDs, loose connections, keyboard node interaction and descriptive labels.
 
-The simulator models TTL changes but does not compute header checksums; explanatory lesson content describes that real routers also update the checksum. See model-limitations.md.
+## Detailed packet headers
+
+The inspector uses original explanations checked against these primary references:
+
+- [RFC 791, section 3.1](https://www.rfc-editor.org/rfc/rfc791.html#section-3.1): IPv4 field widths, IHL, total length, flags/offset, TTL, and header-only checksum.
+- [RFC 792](https://www.rfc-editor.org/rfc/rfc792.html): ICMP echo type 8/code 0, identifier, sequence, data, and checksum over the complete ICMP message.
+- [RFC 826](https://www.rfc-editor.org/rfc/rfc826.html): ARP field widths, Ethernet hardware type, sender/target roles, requests and replies. The unresolved target hardware address is unspecified by this RFC; the model chooses all zeros.
+- [RFC 1071, section 3](https://www.rfc-editor.org/rfc/rfc1071.html#section-3): independent checksum test vector, network-order words, carry folding and odd-byte padding.
+- [RFC 894](https://www.rfc-editor.org/rfc/rfc894.html): IP over Ethernet, EtherType 0x0800 and link padding that is not part of IP total length.
+- [RFC 2474](https://www.rfc-editor.org/rfc/rfc2474.html) and [RFC 3168](https://www.rfc-editor.org/rfc/rfc3168.html): the modern DSCP and ECN split of the IPv4 DS field.
+- IANA [EtherTypes](https://www.iana.org/assignments/ieee-802-numbers/ieee-802-numbers.xhtml), [IP protocol numbers](https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml), and [ARP parameters](https://www.iana.org/assignments/arp-parameters/arp-parameters.xhtml): Ethernet IPv4/ARP, ICMP protocol 1, and ARP operation assignments.
+
+IPv4 and ICMP checksums are computed from the modeled bytes. FCS and complete Ethernet framing remain outside the byte view. See model-limitations.md.

@@ -36,7 +36,7 @@
 }
 .simulation-main {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 350px);
   gap: 1.2rem;
   align-items: start;
 }
@@ -159,6 +159,7 @@
   border-radius: var(--radius-md);
   background: var(--surface);
   overflow: hidden;
+  min-width: 0;
 }
 .inspector-heading {
   padding: 1.1rem 1.2rem;
@@ -198,6 +199,8 @@
   justify-content: space-between;
   font-size: 0.75rem;
   color: var(--muted);
+  gap: 0.3rem 0.5rem;
+  flex-wrap: wrap;
 }
 .inspector-layer dt span {
   font-size: 0.75rem;
@@ -209,6 +212,79 @@
   font-size: 0.875rem;
   margin-top: 0.2rem;
   overflow-wrap: anywhere;
+}
+.packet-step-context,
+.packet-layer-explanation {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.packet-step-context {
+  margin-top: 0.65rem;
+}
+.packet-layer-explanation {
+  padding: 0.7rem 0.8rem 0.2rem;
+}
+.inspector-layer dt .packet-field-size {
+  color: var(--muted);
+  font-weight: 400;
+  margin-left: auto;
+}
+.packet-field-help {
+  display: block;
+  margin-top: 0.4rem;
+  color: var(--muted);
+  font-family: var(--font-geist-sans), sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.7;
+}
+.packet-field-details {
+  border-top: 1px solid var(--border);
+}
+.packet-field-details summary,
+.pending-packet > summary {
+  min-height: 44px;
+  padding: 0.75rem 0.8rem;
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.packet-field-details summary:hover,
+.pending-packet > summary:hover {
+  background: var(--surface-raised);
+}
+.packet-field-details summary:focus-visible,
+.pending-packet > summary:focus-visible {
+  outline-offset: -3px;
+}
+.packet-bytes {
+  padding: 0.8rem;
+  border-top: 1px solid var(--border);
+  background: var(--surface-raised);
+}
+.packet-bytes p {
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.7;
+  margin-bottom: 0.5rem;
+}
+.packet-bytes code {
+  display: block;
+  font-size: 0.8125rem;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+.pending-packet {
+  margin: 1rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  min-width: 0;
+}
+.pending-packet .inspector-layer {
+  margin: 0.6rem;
 }
 .inspector-layer .field-changed {
   background: var(--success-soft);
@@ -288,6 +364,7 @@
 }
 .subsection-heading {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
@@ -432,6 +509,21 @@
   display: grid;
   gap: 1rem;
 }
+.playground-controls > *,
+.playground-palette label,
+.network-configuration fieldset {
+  min-width: 0;
+}
+.network-configuration input,
+.network-configuration select,
+.playground-controls input,
+.playground-controls select {
+  min-width: 0;
+  width: 100%;
+}
+.playground-packet-fields .text-link {
+  white-space: normal;
+}
 .playground-palette {
   display: flex;
   align-items: center;
@@ -483,6 +575,7 @@
 }
 .network-configuration > section {
   min-width: 0;
+  overflow-wrap: anywhere;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background: var(--surface);
@@ -513,7 +606,7 @@
 }
 .port-fields {
   display: grid;
-  grid-template-columns: 1fr 90px;
+  grid-template-columns: minmax(0, 1fr) 90px;
   gap: 0.7rem;
 }
 .port-fields label {
@@ -531,6 +624,10 @@
   gap: 0.7rem;
   align-items: center;
   margin-top: 1rem;
+}
+.network-configuration .button {
+  max-width: 100%;
+  white-space: normal;
 }
 .danger-button {
   color: var(--danger);
@@ -576,12 +673,12 @@
   .simulation-main {
     grid-template-columns: 1fr;
   }
-  .packet-inspector {
+  .packet-layers {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    align-items: start;
   }
-  .inspector-heading,
-  .inspector-note {
+  .pending-packet {
     grid-column: span 2;
   }
   .inspector-layer {
@@ -592,6 +689,9 @@
   }
 }
 @media (max-width: 700px) {
+  .port-fields {
+    grid-template-columns: 1fr;
+  }
   .simulation-timeline ol,
   .network-configuration {
     grid-template-columns: 1fr;
@@ -612,7 +712,7 @@
   .playback-buttons {
     flex-wrap: wrap;
   }
-  .packet-inspector {
+  .packet-layers {
     display: block;
   }
   .topology-canvas {

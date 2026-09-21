@@ -35,6 +35,8 @@ The engine checks local/remote destinations, gateways, ARP broadcast/reply paths
 
 The UI presentation clock selects an existing event. Play/pause, step, reset, speed, and timeline selection never affect networking decisions. Changes to a scenario reset playback. Custom React Flow nodes show devices; edges show the active local transfer. Device tables and text explanations expose the same information without relying on motion, color, or dragging.
 
+Every event also carries a typed packet-header snapshot. Pure serializers in packet-headers.ts encode Ethernet II, ARP, option-free IPv4, and a fixed ICMP echo message; the Internet checksum implementation supplies real IPv4/ICMP checksums. ARP sender/target fields come from the actual selected interfaces and next hop. The current/last/no-frame context distinguishes wire envelopes from the retained IP datagram. Existing compact packet/frame snapshots remain available to the canvas. The shared inspector renders native disclosures, field descriptions/widths, and hexadecimal bytes in both labs, with no new dependencies or persistence changes.
+
 The homepage animation is a simplified fixed illustration; it makes no protocol decisions. The lab and Playground use the actual event engine. See model-limitations.md for explicit teaching assumptions.
 
 ## Subnets

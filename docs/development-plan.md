@@ -25,8 +25,14 @@ The first application commit includes the entire Week 1 app and follows the repo
 
 The owner requested saved playgrounds, accounts with synced progress, and a more detailed Packet Journey. Work proceeds in reviewable units; this request does not authorize staging, commits, pushes, or website deployment.
 
-1. **Saved playgrounds — committed locally:** named browser snapshots, safe loading/deletion, restored device/cable/layout/packet settings, validation of stored data, clear storage-failure feedback, and preservation of unapplied device drafts. No account is required.
-2. **Current unit — accounts and synced progress:** Supabase cookie authentication, guest learning preserved, explicit import of local completion, per-user completion rows, access policies, and cross-device synchronization. A project URL and publishable key plus database setup are required for real integration testing. Never request or expose a service-role key.
-3. **Packet details:** actual typed Ethernet, ARP, IPv4, and ICMP header snapshots, protocol/layer explanations, field sizes, and change highlighting. Distinguish a pending IPv4 packet from ARP traffic and use correct next-hop addresses. Any displayed checksum must be computed from the modeled bytes.
+1. **Saved playgrounds — committed and pushed:** named browser snapshots, safe loading/deletion, restored device/cable/layout/packet settings, validation of stored data, clear storage-failure feedback, and preservation of unapplied device drafts. No account is required.
+2. **Accounts and synced progress — code committed and pushed:** Supabase cookie authentication, guest learning preserved, explicit import of local completion, per-user completion rows, access policies, and cross-device synchronization. A project URL and publishable key plus database setup are still required for real integration testing. Never request or expose a service-role key.
+3. **Packet details — carried into Week 3:** selected by the owner as the next implementation unit below.
 
 For each unit, implement and validate, present the exact proposed files and a short commit message, then wait for the owner's approval before committing or starting the next unit.
+
+## Week 3 — current unit
+
+The owner selected detailed packet headers and protocol explanations as the first Week 3 unit. The shared inspector in Packet Journey and Playground shows typed Ethernet II, ARP, IPv4, and ICMP snapshots, field sizes, protocol explanations, and serialized hexadecimal bytes. ARP traffic is separate from the waiting IPv4 datagram. IPv4 and ICMP checksums are computed from the modeled bytes; TTL and checksum changes are highlighted at the routing step. Expandable fields preserve a readable default view and keyboard access.
+
+This unit adds no services or dependencies. It retains a one-way ICMP echo request, without TCP/UDP, reply traffic, fragmentation, NAT, or live packet capture. Account setup and live verification are still pending separately. More lessons and guided labs are future candidates, not part of this commit.

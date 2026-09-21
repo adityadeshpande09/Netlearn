@@ -70,7 +70,8 @@ export interface TableSnapshot {
   arp: Record<string, ArpEntry[]>;
   mac: Record<string, MacEntry[]>;
 }
-export type ChangedField = "sourceMac" | "destinationMac" | "ttl";
+export type ChangedField =
+  "sourceMac" | "destinationMac" | "ttl" | "ipv4Checksum";
 interface EventBase {
   id: string;
   title: string;
@@ -78,6 +79,7 @@ interface EventBase {
   deviceId: string;
   packet: IPv4Packet;
   frame: EthernetHeader | null;
+  headers: PacketHeaderSnapshot;
   tables: TableSnapshot;
   linkId?: string;
   changed: ChangedField[];
@@ -100,4 +102,62 @@ export interface SimulationResult {
   events: SimulationEvent[];
   outcome: "delivered" | "dropped" | "invalid";
   errors: string[];
+}
+
+export interface EthernetIIHeader {
+  sourceMac: string;
+  destinationMac: string;
+  etherType: 0x0800 | 0x0806;
+  headerLength: 14;
+}
+export interface ArpHeader {
+  hardwareType: 1;
+  protocolType: 0x0800;
+  hardwareLength: 6;
+  protocolLength: 4;
+  operation: 1 | 2;
+  senderMac: string;
+  senderIp: string;
+  targetMac: string;
+  targetIp: string;
+  byteLength: 28;
+}
+export interface IPv4Header {
+  version: 4;
+  ihl: 5;
+  dscp: 0;
+  ecn: 0;
+  totalLength: 36;
+  identification: 1;
+  dontFragment: true;
+  moreFragments: false;
+  fragmentOffset: 0;
+  ttl: number;
+  protocol: 1;
+  checksum: number;
+  sourceIp: string;
+  destinationIp: string;
+  headerLength: 20;
+}
+export interface IcmpEchoHeader {
+  type: 8;
+  code: 0;
+  checksum: number;
+  identifier: 1;
+  sequence: 1;
+  payload: "NetLearn";
+  payloadBytes: readonly number[];
+  headerLength: 8;
+  byteLength: 16;
+}
+export interface PacketHeaderSnapshot {
+  /** A current frame is represented at this step, not necessarily being sent.
+   * Cached/drop events can retain the previous frame for inspection as "last".
+   */
+  frameContext: "none" | "current" | "last";
+  ethernet: EthernetIIHeader | null;
+  arp: ArpHeader | null;
+  /** The tracked datagram remains separate while an ARP frame is inspected. */
+  ipv4: IPv4Header;
+  icmp: IcmpEchoHeader;
 }
