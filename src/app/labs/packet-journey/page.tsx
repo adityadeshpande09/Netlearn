@@ -30,6 +30,9 @@ export default function PacketJourneyPage() {
         <Link className="text-link" href="/playground">
           Build your own network →
         </Link>
+        <Link className="text-link" href="/labs/troubleshooting">
+          Try guided troubleshooting →
+        </Link>
       </div>
     </main>
   );

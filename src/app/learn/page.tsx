@@ -24,6 +24,22 @@ export default function LearnPage() {
         <span aria-current="page">Learning path</span>
       </nav>
       <LearningDashboard lessons={summaries} />
+      <section
+        className="learning-lab-callout"
+        aria-labelledby="practice-heading"
+      >
+        <div>
+          <p className="eyebrow">PUT THE IDEAS TO WORK</p>
+          <h2 id="practice-heading">Find out why a packet stops.</h2>
+          <p>
+            Inspect the evidence, choose a repair, and try again. Three guided
+            labs connect gateways, cables, and TTL to the packet journey.
+          </p>
+        </div>
+        <Link href="/labs/troubleshooting" className="button">
+          Try guided labs
+        </Link>
+      </section>
     </main>
   );
 }

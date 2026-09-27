@@ -31,8 +31,37 @@ The owner requested saved playgrounds, accounts with synced progress, and a more
 
 For each unit, implement and validate, present the exact proposed files and a short commit message, then wait for the owner's approval before committing or starting the next unit.
 
-## Week 3 — current unit
+## Week 3
 
 The owner selected detailed packet headers and protocol explanations as the first Week 3 unit. The shared inspector in Packet Journey and Playground shows typed Ethernet II, ARP, IPv4, and ICMP snapshots, field sizes, protocol explanations, and serialized hexadecimal bytes. ARP traffic is separate from the waiting IPv4 datagram. IPv4 and ICMP checksums are computed from the modeled bytes; TTL and checksum changes are highlighted at the routing step. Expandable fields preserve a readable default view and keyboard access.
 
-This unit adds no services or dependencies. It retains a one-way ICMP echo request, without TCP/UDP, reply traffic, fragmentation, NAT, or live packet capture. Account setup and live verification are still pending separately. More lessons and guided labs are future candidates, not part of this commit.
+This unit added no services or dependencies. It retains a one-way ICMP echo request, without TCP/UDP, reply traffic, fragmentation, NAT, or live packet capture. Account setup and live verification are still pending separately.
+
+Packet details were committed as `9914e36` and pushed with owner approval.
+
+### Current unit — guided labs and hosting preparation
+
+The owner authorized finishing Week 3 and committing this unit locally, while
+deferring live Supabase setup. This approval does not include a push or deployment.
+
+- Guided troubleshooting at /labs/troubleshooting covers a missing default
+  gateway, a disconnected router cable causing ARP failure, and TTL exhaustion.
+  Students inspect the original failure, choose a repair, and compare the actual
+  simulator result using the shared trace and packet inspector. Each attempt
+  starts from the broken baseline; hints and reset support retries. Attempts
+  stay on the page and do not affect lesson completion.
+- Hosting preparation includes Vercel configuration, a safe deployment
+  preflight, isolated guest/account browser validation, an email-code template,
+  and read-only database verification. Empty account settings support guest
+  mode; invalid supplied settings fail the build preflight.
+
+Live email delivery, authenticated database isolation, and a hosted deployment
+remain unverified release steps. A passing local build or mocked account test
+does not finish those checks. See accounts-setup.md and deployment.md.
+
+## Week 4 candidates
+
+Dedicated ARP, ICMP, and subnetting lessons, additional guided exercises, and
+release verification can follow as separate reviewed units. They are not
+included in the Week 3 completion commit. Keep the current five-lesson database
+allowlist until a curriculum expansion updates and validates it deliberately.

@@ -212,6 +212,11 @@ export default function HomePage() {
             </Link>
           ))}
         </div>
+        <p className="path-preview-note">
+          Ready to troubleshoot?{" "}
+          <Link href="/labs/troubleshooting">Try the guided labs</Link> and use
+          the packet trace to find what needs fixing.
+        </p>
       </section>
       <section className="closing-section page-width">
         <div>

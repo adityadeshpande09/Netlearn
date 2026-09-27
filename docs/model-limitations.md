@@ -14,6 +14,17 @@ The app sends no real network traffic. Each trace starts with empty ARP/MAC tabl
 - Playback speed changes presentation only. Reset starts the same deterministic trace. Changing configuration regenerates it.
 - Unsaved canvas changes disappear on reload. Week 2 adds up to 20 named snapshots in the current browser/origin, including positions, topology, source/destination and TTL. Reopening replaces the workspace after confirmation; deleting a snapshot leaves the open workspace intact. Device/route form changes must be applied before saving. Snapshots do not sync across devices; clearing browser data removes them.
 
+## Guided troubleshooting
+
+The three exercises use the same fixed two-network topology and simulation
+boundaries as Packet Journey. Each tests one fault: a missing default gateway,
+a disconnected router cable that prevents ARP resolution, or TTL 1 reaching a
+router. Every repair starts from the original broken network; changes do not
+accumulate. Feedback describes this modeled attempt, not an exhaustive diagnosis
+of a real network. Students can inspect the original and attempted traces.
+Attempts, hints, and solved state are page-local and reset on reload or when
+switching exercises. These labs do not mark lessons complete or sync to accounts.
+
 ## Subnet arithmetic
 
 The calculator accepts /0–/32 independently of the Playground's Ethernet constraints. A /31 assumes a point-to-point link with two endpoints and no subnet-directed broadcast; /32 names one address. /0 covers IPv4 and represents the default-route prefix. Its theoretical host count is arithmetic, not an inventory of assignable internet addresses; 255.255.255.255 is limited broadcast.

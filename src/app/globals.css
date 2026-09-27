@@ -1140,6 +1140,28 @@ progress::-moz-progress-bar {
   color: var(--subtle);
   font-size: 0.875rem;
 }
+.learning-lab-callout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+.learning-lab-callout > div {
+  flex: 1 1 22rem;
+  max-width: 42rem;
+  min-width: 0;
+}
+.learning-lab-callout h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+.learning-lab-callout p:last-child {
+  color: var(--muted);
+}
 .lesson-layout {
   display: grid;
   grid-template-columns: 230px minmax(0, 1fr);

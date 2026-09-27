@@ -55,3 +55,14 @@ The inspector uses original explanations checked against these primary reference
 - IANA [EtherTypes](https://www.iana.org/assignments/ieee-802-numbers/ieee-802-numbers.xhtml), [IP protocol numbers](https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml), and [ARP parameters](https://www.iana.org/assignments/arp-parameters/arp-parameters.xhtml): Ethernet IPv4/ARP, ICMP protocol 1, and ARP operation assignments.
 
 IPv4 and ICMP checksums are computed from the modeled bytes. FCS and complete Ethernet framing remain outside the byte view. See model-limitations.md.
+
+## Guided troubleshooting
+
+The gateway, disconnected-link, and TTL exercises reuse the simulator's teaching
+assumptions. Claims were checked against [RFC 1122, sections 3.3.1.1–3.3.1.2](https://www.rfc-editor.org/rfc/rfc1122.html)
+for local versus gateway delivery, [RFC 826](https://www.rfc-editor.org/rfc/rfc826.html)
+for resolving a next hop over the connected Ethernet network, and
+[RFC 1812, sections 4.2.2.5 and 5.3.1](https://www.rfc-editor.org/rfc/rfc1812.html)
+for TTL decrement, expiry, and checksum updates. A repair is successful only when
+the existing engine delivers the modeled request; the exercises do not claim to
+diagnose arbitrary real networks.

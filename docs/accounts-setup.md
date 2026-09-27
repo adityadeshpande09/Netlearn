@@ -22,6 +22,11 @@ service-role key, database password, or SMTP password in these variables or in
 Git. Configure the same two values in the deployment environment, then rebuild
 the app. Restart the local development server after changing them.
 
+Run `pnpm check:deployment --require-accounts` to validate these settings without
+printing their values. `pnpm build` also validates configuration: no settings
+means guest mode, but partial or malformed settings stop the build. Do not use
+the browser-test fixture values for a real deployment.
+
 The application uses separate browser/server cookie clients and a Next.js proxy
 for session refresh. Server authorization verifies the session with
 `getClaims()`; merely finding a cookie or a `getSession()` result is not an
@@ -46,10 +51,13 @@ a visible `{{ .Token }}` value, for example:
 ```
 
 Keep the subject simple, such as "Your NetLearn sign-in code". Check both a new
-email address and an existing account; any confirmation template used by the
-project must also deliver the code. Keep email verification enabled. Use a numeric code length from 6 to 10 digits, and review the project's
-expiry and resend limits. The sign-in flow expects the learner to enter the code
-in the app, not follow a callback link. [Supabase email OTP guide](https://supabase.com/docs/guides/auth/auth-email-passwordless)
+email address and an existing account. The ready-to-copy body is in
+`supabase/templates/sign-in-code.html`; use it for Magic Link and Confirm Signup
+if that template is used by the project. Any confirmation template must deliver
+the numeric code. Keep email verification enabled. Use a numeric code length
+from 6 to 10 digits, and review the project's expiry and resend limits. The
+sign-in flow expects the learner to enter the code in the app, not follow a
+callback link. [Supabase email OTP guide](https://supabase.com/docs/guides/auth/auth-email-passwordless)
 
 In Authentication URL Configuration, set Site URL to the actual deployed HTTPS
 origin when available. For local-only development, use
@@ -87,6 +95,18 @@ project's SQL Editor or an established Supabase migration workflow. The migratio
 deliberately fails if the table already exists so an unrelated table is not
 silently reused. Keep table grants and RLS enabled together. A filter in the
 browser is not an access boundary. [Supabase row security guide](https://supabase.com/docs/guides/database/postgres/row-level-security)
+
+After applying the migration, run `supabase/verify-setup.sql` in the same
+project's SQL Editor. It reads catalog metadata without changing tables or
+creating test users. Review every failed check before continuing. These checks
+supplement the runtime account-isolation tests below.
+
+Then run `pnpm check:deployment --require-accounts --online` locally. It makes
+read-only requests to the configured Auth settings and an anonymous, zero-row
+completion query. It reports service/configuration errors without dumping
+responses or keys. Anonymous access must be denied. Passing these checks alone
+does not establish authenticated row isolation, SMTP delivery, or successful
+account writes.
 
 `src/lib/supabase/database.types.ts` mirrors this migration and adds an insert
 slug type from the curriculum. It is not a claim that database introspection
@@ -150,16 +170,20 @@ establish that the remote project's row policies or email configuration work.
 
 ## Browser integration tests with a simulated service
 
-The normal browser suite expects an unconfigured guest build. The separate account suite uses the real Supabase browser client with intercepted test responses, synthetic emails, and deliberately invalid fixture tokens. It makes no requests to a real project and does not establish email delivery, token verification, or RLS correctness. Keep preview servers stopped while rebuilding. In PowerShell:
+The separate account suite uses the real Supabase browser client with intercepted
+test responses, synthetic emails, and deliberately invalid fixture tokens. It
+makes no requests to a real project and does not establish email delivery, token
+verification, or RLS correctness. Run the suites sequentially with port 3100 free:
 
-```powershell
-$env:NEXT_PUBLIC_SUPABASE_URL = "http://127.0.0.1:54329"
-$env:NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_browser_fixture"
-pnpm build
-pnpm exec playwright test --config playwright.accounts.config.ts --workers=2
-Remove-Item Env:NEXT_PUBLIC_SUPABASE_URL, Env:NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-pnpm build
+```text
+pnpm test:accounts --workers=2
 pnpm test:e2e --workers=2
 ```
 
-Use a checkout without real .env.local settings for this guest test run. The final build restores normal configuration after the fixture test. The account suite covers explicit import, account switching, failed saves/retry, code errors, focus, and accessible responsive layouts.
+Both commands build into the ignored `.next-test` directory before testing. The
+guest suite sets both public settings to empty strings; the account suite sets
+only its loopback fixtures. These process values take priority over `.env.local`.
+The normal `.next` preview and actual environment files are left intact. Never
+set `NETLEARN_TEST_BUILD` in Vercel. The account suite covers explicit import,
+account switching, failed saves/retry, code errors, focus, and accessible
+responsive layouts.

@@ -6,7 +6,7 @@ Work in small, reviewable units following `docs/architecture.md` and
 `docs/development-plan.md`. The owner explicitly authorized completion of all Week 1 on September 10.
 Complete the foundation, five lessons, Packet Journey, Subnet Visualizer,
 Network Playground, local progress, and full validation as one reviewable batch.
-Week 1, saved playgrounds, and the account/progress implementation are committed and pushed. Live Supabase configuration and verification remain pending. The owner has started Week 3 and selected the detailed packet inspector as the first unit, carrying forward the unfinished Week 2 packet-header request. Implement typed Ethernet, ARP, IPv4, and ICMP headers with explanations and computed checksums, then follow docs/development-plan.md. Future commits and pushes still require explicit approval.
+Week 1, saved playgrounds, the account/progress implementation, and detailed packet headers are committed and pushed. The owner authorized completing Week 3 guided troubleshooting labs and hosting preparation as one reviewed local commit. Live Supabase setup is deferred at the owner's request; Week 4 content is a separate unit. Follow docs/development-plan.md. This approval does not include a push or public deployment. Future commits, pushes, and public deployment still require explicit approval.
 
 ## Git approval and communication
 

@@ -1,6 +1,6 @@
 # NetLearn architecture
 
-The Week 1 app combines original lessons, local progress, and interactive teaching tools. It has eleven user-facing routes, plus custom 404 recovery. Supabase optionally provides email-code authentication and account lesson progress; guest learning and playground saves work without it.
+The app combines five original lessons, local progress, and interactive teaching tools, including guided troubleshooting. It has twelve user-facing routes, plus custom 404 recovery. Supabase optionally provides email-code authentication and account lesson progress; guest learning and playground saves work without it.
 
 ## Stack and rendering
 
@@ -12,18 +12,19 @@ Geist Sans and Mono use next/font. Builds need Google Fonts access; visitors rec
 
 ## Source boundaries
 
-| Directory                   | Responsibility                                          |
-| --------------------------- | ------------------------------------------------------- |
-| src/app                     | Routes, metadata, page composition, design tokens       |
-| src/components              | Shared navigation, footer, motion preferences           |
-| src/content                 | Typed lesson and quiz content                           |
-| src/domain/networking       | Pure addressing, subnet, topology, and simulation logic |
-| src/features/network        | Reusable trace playback, canvas, and inspectors         |
-| src/features/packet-journey | Fixed lesson topology and scenario selection            |
-| src/features/subnet         | Input, binary explanation, subnet facts and splitting   |
-| src/features/playground     | Workspace state, device/route/cable editors             |
-| src/repositories/progress   | Versioned storage boundary and validation               |
-| src/features/progress       | Completion store and React subscription                 |
+| Directory                   | Responsibility                                                 |
+| --------------------------- | -------------------------------------------------------------- |
+| src/app                     | Routes, metadata, page composition, design tokens              |
+| src/components              | Shared navigation, footer, motion preferences                  |
+| src/content                 | Typed lesson and quiz content                                  |
+| src/domain/networking       | Pure addressing, subnet, topology, and simulation logic        |
+| src/features/network        | Reusable trace playback, canvas, and inspectors                |
+| src/features/packet-journey | Fixed lesson topology and scenario selection                   |
+| src/features/guided-labs    | Troubleshooting choices, feedback, hints, and trace comparison |
+| src/features/subnet         | Input, binary explanation, subnet facts and splitting          |
+| src/features/playground     | Workspace state, device/route/cable editors                    |
+| src/repositories/progress   | Versioned storage boundary and validation                      |
+| src/features/progress       | Completion store and React subscription                        |
 
 Networking code cannot import React, Next, or UI modules; ESLint enforces the boundary. Native controls cover the current interface needs without an extra component framework. The small progress record uses an explicit runtime validator rather than a schema dependency.
 
@@ -38,6 +39,16 @@ The UI presentation clock selects an existing event. Play/pause, step, reset, sp
 Every event also carries a typed packet-header snapshot. Pure serializers in packet-headers.ts encode Ethernet II, ARP, option-free IPv4, and a fixed ICMP echo message; the Internet checksum implementation supplies real IPv4/ICMP checksums. ARP sender/target fields come from the actual selected interfaces and next hop. The current/last/no-frame context distinguishes wire envelopes from the retained IP datagram. Existing compact packet/frame snapshots remain available to the canvas. The shared inspector renders native disclosures, field descriptions/widths, and hexadecimal bytes in both labs, with no new dependencies or persistence changes.
 
 The homepage animation is a simplified fixed illustration; it makes no protocol decisions. The lab and Playground use the actual event engine. See model-limitations.md for explicit teaching assumptions.
+
+## Guided troubleshooting
+
+Typed exercise content supplies symptoms, repair choices, hints, and explanations.
+Pure scenario builders in src/domain/networking/guided-scenarios.ts recreate a
+broken baseline for every attempt, apply one repair, and feed the existing
+simulator. Delivery is determined by that simulator rather than a UI answer key.
+The client keeps only page-local attempt state and reuses SimulationSession for
+both original and attempted traces. There is no new persistence, protocol engine,
+dependency, or lesson completion behavior.
 
 ## Subnets
 
@@ -55,7 +66,16 @@ Vitest/Testing Library cover observable logic and storage behavior. Playwright t
 
 ## Deployment
 
-The standard Next.js build is ready for an eventual Vercel deployment. Guest mode requires no environment variables. Accounts require the two public Supabase settings, the completion migration, and email configuration described in accounts-setup.md. Deployment, pushes, and Git commits remain separate owner approvals. No Site is registered and no hosting manifest is present. See deployment.md for the reviewable release procedure.
+The standard Next.js build targets Vercel. Guest mode requires no environment variables. Accounts require the two public Supabase settings, the completion migration, and email configuration described in accounts-setup.md. Deployment, pushes, and Git commits remain separate owner approvals. No Site is registered. See deployment.md for the release procedure.
+
+The deployment preflight reuses the application configuration parser and Next's
+environment loader. Normal builds validate settings before compilation: empty
+settings mean guest mode and invalid supplied settings fail. Optional online
+checks use bounded, read-only requests without logging keys or responses and
+do not certify email delivery or authenticated database isolation. vercel.json
+sets the standard framework and commands. Browser-test runners override public
+settings and use an ignored .next-test directory, preserving the normal preview
+build and avoiding requests to a live project.
 
 ## Saved playgrounds (Week 2)
 

@@ -1,6 +1,6 @@
 import { defineConfig } from "@playwright/test";
 import base from "./playwright.config";
-// Build with these public fixture values before this suite; no real Supabase service is contacted.
+// pnpm test:accounts builds with matching public fixtures in .next-test.
 export default defineConfig({
   ...base,
   testDir: "./tests/accounts",
