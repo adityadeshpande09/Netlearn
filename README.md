@@ -1,6 +1,6 @@
 # NetLearn
 
-Make invisible networking processes visible. Learn through five lessons with prediction questions, Packet Journey, guided troubleshooting labs, a Subnet Visualizer, and a Network Playground with browser saves. Optional accounts sync lesson progress after Supabase setup.
+Make invisible networking processes visible. Learn through lessons with prediction questions, Packet Journey, guided troubleshooting labs, a Subnet Visualizer, and a Network Playground with browser saves. Optional accounts sync lesson progress.
 
 ## Run locally
 
