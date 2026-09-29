@@ -38,7 +38,7 @@ The UI presentation clock selects an existing event. Play/pause, step, reset, sp
 
 Every event also carries a typed packet-header snapshot. Pure serializers in packet-headers.ts encode Ethernet II, ARP, option-free IPv4, and a fixed ICMP echo message; the Internet checksum implementation supplies real IPv4/ICMP checksums. ARP sender/target fields come from the actual selected interfaces and next hop. The current/last/no-frame context distinguishes wire envelopes from the retained IP datagram. Existing compact packet/frame snapshots remain available to the canvas. The shared inspector renders native disclosures, field descriptions/widths, and hexadecimal bytes in both labs, with no new dependencies or persistence changes.
 
-The homepage animation is a simplified fixed illustration; it makes no protocol decisions. The lab and Playground use the actual event engine. See model-limitations.md for explicit teaching assumptions.
+The homepage animation is a simplified fixed illustration; it makes no protocol decisions. The lab and Playground use the actual event engine. See [model limitations](model-limitations.md) for explicit teaching assumptions.
 
 ## Guided troubleshooting
 
@@ -75,7 +75,7 @@ Vitest/Testing Library cover observable logic and storage behavior. Playwright t
 
 ## Deployment
 
-The standard Next.js build runs on Vercel at https://netlearn-ad.vercel.app. Guest mode requires no environment variables. Accounts require the two public Supabase settings, all completion migrations, and email configuration described in accounts-setup.md. Deployment, pushes, and Git commits remain separate owner approvals. See deployment.md for the release procedure.
+The standard Next.js build runs on Vercel at https://netlearn-ad.vercel.app. Guest mode requires no environment variables. Accounts require the two public Supabase settings, all completion migrations, and email configuration described in [account setup](accounts-setup.md). Deployment, pushes, and Git commits remain separate owner approvals. See [deployment](deployment.md) for the release procedure.
 
 The deployment preflight reuses the application configuration parser and Next's
 environment loader. Normal builds validate settings before compilation: empty
@@ -98,7 +98,7 @@ The browser uses @supabase/ssr 0.12.7 with @supabase/supabase-js 2.116.0 for coo
 
 The existing synchronous guest repository is preserved separately. A pure asynchronous account store unions confirmed rows with pending completions and inserts only new rows, ignoring duplicates. It never auto-imports browser progress. Sign-out/account changes clear account memory and return to untouched guest progress. Unconfirmed account completions stay in tab memory, with visible failure/retry feedback and a leave-page warning while changes are pending. Refresh happens on login, window focus, reconnect, and explicit retry. There is no realtime subscription or cloud playground storage in this unit.
 
-Unit tests cover stale sessions, account changes, offline retries, duplicate writes, and response validation. A separate browser suite intercepts Supabase requests to exercise the real client and screens; it does not verify actual email delivery, token signatures, or the remote database. SQL tests and a real two-account/two-device check remain required before release. See accounts-setup.md for setup and exact validation boundaries.
+Unit tests cover stale sessions, account changes, offline retries, duplicate writes, and response validation. A separate browser suite intercepts Supabase requests to exercise the real client and screens; it does not verify actual email delivery, token signatures, or the remote database. SQL tests and a real two-account/two-device check remain required before release. See [account setup](accounts-setup.md) for setup and exact validation boundaries.
 
 The host terminal delegates strict command parsing and output formatting to
 `domain/networking/host-commands.ts`. Diagnostics call the existing pure simulator;
