@@ -18,6 +18,7 @@
   --warning-soft: #fff4de;
   --danger: #ae3636;
   --info: #245590;
+  --network-foreground: #e7f0f6;
   --network-bg: #152d42;
   --network-surface: #1c384f;
   --network-line: #55738a;
@@ -39,6 +40,44 @@
   --duration-fast: 160ms;
   --duration-normal: 280ms;
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+/* Apply saved preference before paint; the initial default follows the OS. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #101923;
+  --surface: #172331;
+  --surface-raised: #223448;
+  --foreground: #e5edf5;
+  --muted: #b2c2d2;
+  --subtle: #a6bbd0;
+  --border: #41556b;
+  --accent: #8dbaff;
+  --accent-hover: #b3d1ff;
+  --accent-soft: #213b5e;
+  --secondary: #77d8c9;
+  --success: #85dbb1;
+  --success-soft: #173e32;
+  --warning: #f2cb82;
+  --warning-soft: #443622;
+  --danger: #ffaaaa;
+  --info: #a4c9ff;
+  --shadow: 0 12px 36px rgb(0 0 0 / 20%);
+}
+.theme-toggle {
+  flex-shrink: 0;
+  color: var(--foreground);
+}
+.theme-sun {
+  display: none;
+}
+[data-theme="dark"] .theme-sun {
+  display: block;
+}
+[data-theme="dark"] .theme-moon {
+  display: none;
+}
+[data-theme="dark"] .button-inverse {
+  color: var(--foreground);
 }
 @theme inline {
   --color-background: var(--background);
@@ -344,7 +383,7 @@ svg {
 .packet-preview {
   border-radius: var(--radius-lg);
   background: var(--network-bg);
-  color: var(--surface);
+  color: var(--network-foreground);
   box-shadow: var(--shadow);
   overflow: hidden;
   scroll-margin-top: 1rem;
@@ -417,7 +456,7 @@ svg {
   box-shadow: 0 0 0 4px rgb(112 223 199 / 6%);
 }
 .network-stop.is-reached strong {
-  color: var(--surface);
+  color: var(--network-foreground);
 }
 .stop-number {
   position: absolute;
@@ -493,7 +532,7 @@ svg {
   border-radius: var(--radius-sm);
 }
 .packet-reset:hover {
-  color: var(--surface);
+  color: var(--network-foreground);
   border-color: var(--network-muted);
 }
 .packet-preview :focus-visible {
@@ -915,7 +954,7 @@ svg {
   display: flex;
   align-items: center;
   background: var(--network-bg);
-  color: var(--surface);
+  color: var(--network-foreground);
   border-radius: var(--radius-md);
   padding: 2rem;
   overflow: hidden;

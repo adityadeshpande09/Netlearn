@@ -1,4 +1,5 @@
 "use client";
+import { ThemeToggle } from "./theme-toggle";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight, Menu, X, Network } from "lucide-react";
@@ -59,6 +60,7 @@ export function SiteHeader() {
         <Link className="button button-small header-cta" href="/account">
           Your account <ArrowUpRight size={16} />
         </Link>
+        <ThemeToggle />
         <button
           ref={trigger}
           type="button"

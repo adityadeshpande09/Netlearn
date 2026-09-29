@@ -1,5 +1,5 @@
 .home {
-  background: #faf9f6;
+  background: var(--background);
 }
 .hero {
   display: grid;
@@ -130,7 +130,7 @@
 }
 .activity:hover {
   border-color: var(--accent);
-  background: #f4f7fc;
+  background: var(--surface-raised);
 }
 .activity > svg {
   color: var(--accent);

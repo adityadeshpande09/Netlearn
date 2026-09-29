@@ -10,7 +10,7 @@
   gap: 3rem;
   padding: 2rem;
   background: var(--network-bg);
-  color: var(--surface);
+  color: var(--network-foreground);
   border-radius: var(--radius-lg);
 }
 .subnet-input-panel h2 {
@@ -56,7 +56,7 @@
   margin-top: 0.7rem;
   border-radius: var(--radius-sm);
   color: var(--danger);
-  background: #fff0f0;
+  background: var(--warning-soft);
   font-size: 0.875rem;
 }
 .subnet-result {
@@ -178,7 +178,7 @@
 }
 .host-bit {
   color: var(--secondary);
-  background: #e5f5ef;
+  background: var(--success-soft);
 }
 .binary-octets {
   display: grid;

@@ -302,7 +302,7 @@
   gap: 1rem;
   padding: 1.3rem;
   background: var(--network-bg);
-  color: var(--surface);
+  color: var(--network-foreground);
   border-radius: var(--radius-md);
   margin-top: 1rem;
   min-height: 160px;
