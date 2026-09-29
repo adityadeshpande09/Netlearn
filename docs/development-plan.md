@@ -78,4 +78,4 @@ configure a live Supabase project. More troubleshooting exercises and real
 account verification remain follow-up work. Report the finished diff and checks
 before requesting separate commit and release approval.
 
-The owner additionally requested a Playground host terminal. This checkout implements read-only address, route and neighbor displays plus simulated ping and TTL traceroute; configuration commands remain future work. Release and resume claims wait for deployment.
+The owner additionally requested a Playground host terminal. This checkout implements read-only address, route and neighbor displays plus simulated ping and TTL traceroute; a subsequent approved unit adds `ip route add default via <IPv4>` and a resettable missing-gateway repair exercise. Other configuration commands remain future work. Release and resume claims wait for deployment.

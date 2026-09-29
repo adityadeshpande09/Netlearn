@@ -1,7 +1,16 @@
 import { useCallback, useMemo, useState } from "react";
 import type { Connection } from "@xyflow/react";
-import { localTopology, routedTopology } from "@/domain/networking/scenarios";
-import type { Endpoint, NetworkDevice } from "@/domain/networking/types";
+import {
+  localTopology,
+  routedTopology,
+  missingGatewayTopology,
+} from "@/domain/networking/scenarios";
+import type {
+  Endpoint,
+  NetworkDevice,
+  NetworkTopology,
+  HostDevice,
+} from "@/domain/networking/types";
 import { endpointKey } from "@/domain/networking/topology";
 import {
   initialPositions,
@@ -12,7 +21,30 @@ import type { WorkspaceSnapshot } from "@/repositories/playgrounds/workspace-sna
 import { nextCableId, nextWorkspaceDevice } from "./workspace-identifiers";
 
 export function useNetworkWorkspace() {
-  const [topology, setTopology] = useState(routedTopology);
+  const [topology, updateTopology] = useState(routedTopology);
+  const [terminalRevision, setTerminalRevision] = useState(0);
+  const [editorRevision, setEditorRevision] = useState(0);
+  function setTopology(value: NetworkTopology) {
+    updateTopology(value);
+    setTerminalRevision((current) => current + 1);
+  }
+  function applyTerminalHost(device: HostDevice): string | undefined {
+    if (hasDraft)
+      return "Apply the pending device form edits before changing routes in the terminal.";
+    updateTopology({
+      ...topology,
+      devices: topology.devices.map((item) =>
+        item.id === device.id ? device : item,
+      ),
+    });
+    setEditorRevision((current) => current + 1);
+    setMessage(
+      device.name +
+        " default route updated. The journey has been recalculated.",
+    );
+    setError("");
+    return undefined;
+  }
   const [positions, setPositions] = useState<Positions>(initialPositions);
   const [selectedId, selectDevice] = useState("pc-a");
   const [hasDraft, setHasDraft] = useState(false);
@@ -58,11 +90,13 @@ export function useNetworkWorkspace() {
     setPreset(value);
     setRevision((current) => current + 1);
     setTopology(
-      value === "local"
-        ? localTopology()
-        : value === "blank"
-          ? { devices: [], links: [] }
-          : routedTopology(),
+      value === "missing-gateway"
+        ? missingGatewayTopology()
+        : value === "local"
+          ? localTopology()
+          : value === "blank"
+            ? { devices: [], links: [] }
+            : routedTopology(),
     );
     setPositions(initialPositions);
     setTtl(64);
@@ -167,11 +201,14 @@ export function useNetworkWorkspace() {
   const move = useCallback(
     (id: string, position: Point) =>
       setPositions((current) => ({ ...current, [id]: position })),
-    [],
+    [setPositions],
   );
 
   return {
     workspace,
+    terminalRevision,
+    editorRevision,
+    applyTerminalHost,
     loadWorkspace,
     hasDraft,
     setHasDraft,

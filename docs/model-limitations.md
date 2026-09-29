@@ -54,7 +54,15 @@ The engine does not generate echo replies or Time Exceeded packets, test the
 return path, or measure RTT. Linux traceroute normally uses UDP; this teaching
 version always uses ICMP. Only other workspace hosts can be targeted.
 
-Each probe starts with empty engine tables. Commands do not change the timeline
-or topology. Histories retain 30 commands per host and reset on topology edits
-or reload; saved playgrounds do not store terminal sessions. Configuration
-commands, DNS names, pipes, and real traffic are intentionally unsupported.
+Each probe starts with empty engine tables. Diagnostic commands do not change the timeline or topology. Histories retain 30 commands per host and reset on external topology edits
+or reload; saved playgrounds do not store terminal sessions. The sole configuration command is `ip route add default via <IPv4>`. It adds a
+missing default gateway to the selected host and recalculates the shared journey.
+Existing defaults must be changed or cleared in the device form. The gateway
+must be a usable, distinct address on the host's /1–/30 subnet; acceptance does
+not imply ARP reachability. Pending form edits block terminal changes. Repairs
+preserve history but discard prior probe tables; other topology edits reset
+history. Save a playground snapshot to persist a repair. Address changes, route
+delete/replace, DNS names, pipes, and real traffic remain unsupported.
+
+Command syntax reference: [ip-route(8)](https://man7.org/linux/man-pages/man8/ip-route.8.html).
+These are teaching-model constraints, not a full Linux implementation.

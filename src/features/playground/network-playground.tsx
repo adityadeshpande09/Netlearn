@@ -9,6 +9,9 @@ import { useNetworkWorkspace } from "./use-network-workspace";
 export function NetworkPlayground() {
   const {
     workspace,
+    terminalRevision,
+    editorRevision,
+    applyTerminalHost,
     loadWorkspace,
     hasDraft,
     setHasDraft,
@@ -60,6 +63,7 @@ export function NetworkPlayground() {
                 </option>
               )}
               <option value="routed">Two networks & a router</option>
+              <option value="missing-gateway">Repair a missing gateway</option>
               <option value="local">Two computers on a LAN</option>
               <option value="blank">Empty workspace</option>
             </select>
@@ -140,6 +144,38 @@ export function NetworkPlayground() {
           </p>
         </div>
       </section>
+      {preset === "missing-gateway" && (
+        <section
+          className="simulation-guide"
+          aria-label="Gateway repair exercise"
+        >
+          <h2>Why can’t PC-A reach PC-B?</h2>
+          <p>
+            In PC-A’s terminal, run <code>ip route</code> and{" "}
+            <code>ping 10.0.0.20</code>. Use the router’s interface on PC-A’s
+            subnet as the missing gateway, then retry with{" "}
+            <code>traceroute 10.0.0.20</code>.
+          </p>
+          <details>
+            <summary>Show the repair command</summary>
+            <p>
+              <code>ip route add default via 192.168.1.1</code>
+            </p>
+            <p>
+              The default route handles destinations outside the directly
+              connected subnet. ARP then resolves the gateway’s MAC address. A
+              route alone does not guarantee delivery.
+            </p>
+          </details>
+          <button
+            className="button button-secondary"
+            type="button"
+            onClick={() => loadPreset("missing-gateway")}
+          >
+            Reset repair exercise
+          </button>
+        </section>
+      )}
       {error && (
         <p className="simulation-errors" role="alert">
           {error}
@@ -153,7 +189,8 @@ export function NetworkPlayground() {
         scenario={scenario}
         renderTools={(event) => (
           <HostTerminal
-            key={JSON.stringify(topology)}
+            key={terminalRevision}
+            onApplyHost={applyTerminalHost}
             topology={topology}
             selectedId={selectedId}
             onSelect={setSelectedId}
@@ -172,7 +209,7 @@ export function NetworkPlayground() {
         <div className="network-configuration" id="network-configuration">
           {selected ? (
             <DeviceEditor
-              key={revision + ":" + selected.id}
+              key={revision + ":" + editorRevision + ":" + selected.id}
               device={selected}
               onDraftChange={setHasDraft}
               onSave={saveDevice}

@@ -105,3 +105,10 @@ The host terminal delegates strict command parsing and output formatting to
 there is no second forwarding engine or server execution endpoint. The client
 component owns bounded per-host histories, drafts and diagnostic snapshots.
 `SimulationSession.renderTools` exposes the selected typed event to the terminal.
+
+Default-route commands return a validated `updatedHost` value without mutating
+inputs. The workspace applies it through the same topology state as the forms,
+refreshes the device editor, and recalculates the simulation. Terminal repairs
+retain histories but clear all diagnostic snapshots. External topology changes
+increment a separate terminal revision and reset sessions. Unapplied editor
+drafts block terminal mutations so they cannot be silently overwritten.

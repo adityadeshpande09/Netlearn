@@ -13,7 +13,7 @@ Make invisible networking processes visible. Learn through lessons with predicti
 - **Troubleshoot a network.** Diagnose a missing gateway, a disconnected cable, or an expired TTL; choose a repair and inspect the simulator's result.
 - **Explore subnets.** Change an IPv4 prefix, inspect the binary boundary, compare address ranges, and split networks into smaller subnets.
 - **Build your own topology.** Connect and configure up to eight devices, test delivery, and save up to 20 named playgrounds in your browser. Native forms provide alternatives to dragging.
-- **Inspect a host.** Open its Playground terminal for `ip addr`, `ip route`, `ip neigh`, `ping` and `traceroute`. Diagnostics use the same engine and label the absence of reply packets and timings.
+- **Inspect a host.** Open its Playground terminal for `ip addr`, `ip route`, `ip neigh`, `ping` and `traceroute`. The missing-gateway exercise lets you diagnose a failure, repair it with `ip route add default via <IPv4>`, and trace the working path. Diagnostics use the same engine and label the absence of reply packets and timings.
 - **Keep your progress.** Guest completion stays in your browser. Optional Supabase accounts support email-code sign-in and synced lesson completion after setup.
 
 The interface includes keyboard controls, visible focus, reduced-motion support, responsive layouts, and text explanations alongside animations.

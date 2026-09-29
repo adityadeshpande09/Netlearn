@@ -2,7 +2,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Terminal } from "lucide-react";
 import { runHostCommand } from "@/domain/networking/host-commands";
-import type { NetworkTopology, TableSnapshot } from "@/domain/networking/types";
+import type {
+  HostDevice,
+  NetworkTopology,
+  TableSnapshot,
+} from "@/domain/networking/types";
 import styles from "./host-terminal.module.css";
 
 type Entry = { command: string; output: string };
@@ -14,7 +18,9 @@ export function HostTerminal({
   selectedId,
   tables,
   onSelect,
+  onApplyHost,
 }: {
+  onApplyHost: (host: HostDevice) => string | undefined;
   topology: NetworkTopology;
   selectedId: string;
   tables: TableSnapshot;
@@ -49,8 +55,19 @@ export function HostTerminal({
       host.id,
       session.tables ?? tables,
     );
+    let changed = false;
+    if (result.updatedHost) {
+      const error = onApplyHost(result.updatedHost);
+      if (error) result.output = error;
+      else changed = true;
+    }
     setSessions((current) => ({
-      ...current,
+      ...Object.fromEntries(
+        Object.entries(current).map(([id, value]) => [
+          id,
+          changed ? { entries: value.entries } : value,
+        ]),
+      ),
       [host.id]: {
         entries: result.clear
           ? []
@@ -58,7 +75,7 @@ export function HostTerminal({
               ...session.entries,
               { command: command.trim(), output: result.output },
             ].slice(-30),
-        ...(result.tables || session.tables
+        ...(!changed && (result.tables || session.tables)
           ? { tables: result.tables ?? session.tables }
           : {}),
       },
@@ -185,7 +202,9 @@ export function HostTerminal({
               : "selected simulation step"}
             . Each probe starts with empty tables. History is separate for each
             host (last 30 commands), and resets when the network configuration
-            changes or you reload.
+            changes outside this terminal or you reload. Route repairs keep
+            history and discard previous probe tables. Save a snapshot to keep a
+            repair.
           </p>
         </>
       ) : (

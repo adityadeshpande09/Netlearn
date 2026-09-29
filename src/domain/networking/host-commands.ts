@@ -11,17 +11,19 @@ export interface TerminalResult {
   output: string;
   tables?: TableSnapshot;
   clear?: boolean;
+  updatedHost?: HostDevice;
 }
 const help = [
   "NetLearn simulated Linux-style terminal (not a real shell)",
   "ip addr                 Show this host's configured interfaces",
   "ip route                Show connected routes and default gateway",
+  "ip route add default via <IPv4>  Set a missing default gateway in this workspace",
   "ip neigh                Show ARP entries from the selected trace or latest probe",
   "ping <IPv4>             Send one modeled echo request, TTL 64",
   "traceroute [-I] <IPv4>   Probe TTL 1–16 using the ICMP request engine",
   "help                    Show these commands",
   "clear                   Clear this host's terminal output",
-  "Targets must be other hosts in this workspace. No DNS, real traffic, reply packets, RTT, pipes, or configuration commands.",
+  "Targets must be other hosts in this workspace. No DNS, real traffic, reply packets, RTT, pipes, or other configuration commands.",
 ].join("\n");
 
 function diagnosticTables(result: SimulationResult): TableSnapshot {
@@ -47,6 +49,62 @@ export function runHostCommand(
       device.id === hostId && device.kind === "host",
   );
   if (!host) return { output: "Select a computer to open its terminal." };
+  if (args.slice(0, 3).join(" ") === "ip route add") {
+    if (args.length !== 6 || args[3] !== "default" || args[4] !== "via")
+      return { output: "Usage: ip route add default via <IPv4>" };
+    if (host.defaultGateway)
+      return {
+        output:
+          "Error: a default route already exists. Clear or change it in the device form first.",
+      };
+    const port = host.interfaces[0];
+    const address = parseIpv4(port?.ipAddress ?? "");
+    const prefix = port?.prefixLength;
+    if (
+      !port ||
+      host.interfaces.length !== 1 ||
+      address === null ||
+      prefix === undefined ||
+      !validPrefix(prefix) ||
+      prefix < 1 ||
+      prefix > 30
+    )
+      return {
+        output:
+          "Error: configure one valid IPv4 interface with a /1–/30 prefix first.",
+      };
+    const gatewayText = args[5] ?? "";
+    const gateway = parseIpv4(gatewayText);
+    const network = networkNumber(address, prefix);
+    const broadcast = network + 2 ** (32 - prefix) - 1;
+    if (
+      address <= network ||
+      address >= broadcast ||
+      address < 16777216 ||
+      Math.floor(address / 16777216) === 127 ||
+      address >= 3758096384
+    )
+      return {
+        output: "Error: configure a usable unicast host address first.",
+      };
+    if (
+      gateway === null ||
+      gateway <= network ||
+      gateway >= broadcast ||
+      gateway === address ||
+      gateway < 16777216 ||
+      Math.floor(gateway / 16777216) === 127 ||
+      gateway >= 3758096384
+    )
+      return {
+        output:
+          "Error: gateway must be a usable IPv4 address on this host's subnet, distinct from the host, network and broadcast addresses.",
+      };
+    return {
+      output: `Default route added via ${gatewayText} dev ${port.name}. Workspace updated; use ping or traceroute to test delivery. This does not verify gateway reachability.`,
+      updatedHost: { ...host, defaultGateway: gatewayText },
+    };
+  }
   if (normalized === "ip addr" || normalized === "ip addr show") {
     return {
       output:
@@ -103,7 +161,7 @@ export function runHostCommand(
   if (!isPing && !isTrace)
     return {
       output:
-        "Unsupported command. Type help. This is a read-only simulator, not a system shell.",
+        "Unsupported command. Type help. This is a teaching simulator, not a system shell.",
     };
   const target =
     isTrace && args[1] === "-I" && args.length === 3

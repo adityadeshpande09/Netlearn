@@ -127,3 +127,11 @@ export function packetJourneyScenario(): SimulationScenario {
     ttl: 64,
   };
 }
+
+/** A routed example with one fault: PC-A cannot reach a remote subnet. */
+export function missingGatewayTopology(): NetworkTopology {
+  const topology = routedTopology();
+  const host = topology.devices.find((device) => device.id === "pc-a");
+  if (host?.kind === "host") delete host.defaultGateway;
+  return topology;
+}

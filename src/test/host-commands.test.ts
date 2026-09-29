@@ -4,6 +4,7 @@ import {
   routedTopology,
   localTopology,
   makeDevice,
+  missingGatewayTopology,
 } from "@/domain/networking/scenarios";
 import { simulatePacket } from "@/domain/networking/simulator";
 import type { NetworkTopology } from "@/domain/networking/types";
@@ -132,10 +133,86 @@ describe("host teaching commands", () => {
     expect(run("ping 192.168.1.1").output).toContain("router targets");
     expect(run("ping 192.168.1.10").output).toContain("loopback");
     expect(run("ip addr; whoami").output).toContain("Unsupported");
-    expect(run("ip route add default via 192.168.1.1").output).toContain(
-      "Unsupported",
-    );
+    expect(run("ip addr add 192.168.1.2/24").output).toContain("Unsupported");
     expect(run("a".repeat(161)).output).toContain("too long");
     expect(run("clear").clear).toBe(true);
+  });
+});
+
+describe("default gateway repairs", () => {
+  it("returns an immutable host update that restores routed delivery", () => {
+    const topology = missingGatewayTopology();
+    const before = structuredClone(topology);
+    expect(run("ping 10.0.0.20", topology).output).toContain(
+      "No default gateway",
+    );
+    const result = run("ip route add default via 192.168.1.1", topology);
+    expect(result.updatedHost?.defaultGateway).toBe("192.168.1.1");
+    expect(topology).toEqual(before);
+    const repaired = {
+      ...topology,
+      devices: topology.devices.map((device) =>
+        device.id === result.updatedHost?.id ? result.updatedHost : device,
+      ),
+    };
+    expect(run("ip route", repaired).output).toContain(
+      "default via 192.168.1.1",
+    );
+    expect(run("traceroute 10.0.0.20", repaired).output).toContain(
+      "2  10.0.0.20  destination reached",
+    );
+    expect(
+      run("ip route add default via 192.168.1.254", repaired).updatedHost,
+    ).toBeUndefined();
+    expect(
+      run("ip route add default via 192.168.1.1", repaired).output,
+    ).toContain("already exists");
+  });
+  it.each([
+    "garbage",
+    "999.1.1.1",
+    "192.168.1.0",
+    "192.168.1.255",
+    "192.168.1.10",
+    "10.0.0.1",
+    "224.0.0.1",
+    "127.0.0.1",
+    "0.0.0.0",
+  ])("rejects an invalid or off-link gateway: %s", (gateway) => {
+    const result = run(
+      `ip route add default via ${gateway}`,
+      missingGatewayTopology(),
+    );
+    expect(result.updatedHost).toBeUndefined();
+    expect(result.output).toContain("Error:");
+  });
+  it.each([
+    "ip route add default",
+    "ip route add default via 192.168.1.1 dev eth0",
+    "ip route add default via 192.168.1.1; whoami",
+  ])("rejects unsupported syntax: %s", (command) => {
+    expect(run(command, missingGatewayTopology()).updatedHost).toBeUndefined();
+  });
+  it("does not mistake an accepted route for a reachable gateway", () => {
+    const topology = missingGatewayTopology();
+    const result = run("ip route add default via 192.168.1.254", topology);
+    expect(result.updatedHost).toBeDefined();
+    topology.devices = topology.devices.map((device) =>
+      device.id === result.updatedHost?.id ? result.updatedHost : device,
+    );
+    expect(run("ping 10.0.0.20", topology).output).toContain(
+      "No device answers ARP",
+    );
+  });
+  it("rejects an unconfigured host interface and a non-host selection", () => {
+    const topology = missingGatewayTopology();
+    delete topology.devices[0]!.interfaces[0]!.ipAddress;
+    expect(
+      run("ip route add default via 192.168.1.1", topology).output,
+    ).toContain("configure one valid");
+    expect(
+      run("ip route add default via 192.168.1.1", topology, "router-r1")
+        .updatedHost,
+    ).toBeUndefined();
   });
 });
