@@ -2,7 +2,7 @@
 
 **See networking happen.**
 
-NetLearn is an interactive learning app for students getting started with computer networks. Read a short lesson, make a prediction, then follow the packet to see why it arrives—or where it stops.
+Make invisible networking processes visible. Learn through lessons with prediction questions, Packet Journey, guided troubleshooting labs, a Subnet Visualizer, and a Network Playground with browser saves. Optional accounts sync lesson progress.
 
 [Explore NetLearn](https://netlearn-ad.vercel.app) · [Learning path](https://netlearn-ad.vercel.app/learn) · [Try a lab](https://netlearn-ad.vercel.app/labs/troubleshooting)
 
