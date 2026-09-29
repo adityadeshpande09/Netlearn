@@ -1,5 +1,5 @@
 -- Paste this entire SELECT into the Supabase SQL Editor after applying
--- migrations/202609150001_lesson_completions.sql. It reads catalogs only:
+-- all migrations through 202609280001_extend_lessons.sql. It reads catalogs only:
 -- no account data, credentials, fixtures, extensions, or database changes.
 -- Every passed value should be true. A false result needs investigation;
 -- do not rerun the CREATE TABLE migration over an existing table to fix it.
@@ -105,14 +105,14 @@ checks as (
     ),
     'user_id references auth.users(id), ON DELETE CASCADE, ON UPDATE NO ACTION.'
   union all
-  select 5, 'Exactly the five supported lesson slugs',
+  select 5, 'Exactly the eight supported lesson slugs',
     exists (
       select 1 from constraints_found
       where contype = 'c' and convalidated and not connoinherit
         and check_expression =
-          $expr$(lesson_slug=ANY(ARRAY['network-basics'::text,'mac-vs-ip'::text,'switches'::text,'routers'::text,'packet-travel'::text]))$expr$
+          $expr$(lesson_slug=ANY(ARRAY['network-basics'::text,'mac-vs-ip'::text,'switches'::text,'routers'::text,'packet-travel'::text,'arp'::text,'icmp-ping'::text,'subnetting'::text]))$expr$
     ),
-    'A validated CHECK permits only network-basics, mac-vs-ip, switches, routers, packet-travel.'
+    'A validated CHECK permits only network-basics, mac-vs-ip, switches, routers, packet-travel, arp, icmp-ping, subnetting.'
   union all
   select 6, 'Row level security enabled',
     (select relrowsecurity from target),

@@ -4,6 +4,9 @@ export const lessonSlugs = [
   "switches",
   "routers",
   "packet-travel",
+  "arp",
+  "icmp-ping",
+  "subnetting",
 ] as const;
 export type LessonSlug = (typeof lessonSlugs)[number];
 export interface QuizQuestion {
@@ -28,7 +31,15 @@ export interface Lesson {
     callout?: { label: string; body: string };
   }[];
   concepts: { term: string; definition: string }[];
-  diagram: "lan" | "addresses" | "switch" | "router" | "journey";
+  diagram:
+    | "lan"
+    | "addresses"
+    | "switch"
+    | "router"
+    | "journey"
+    | "arp"
+    | "echo"
+    | "subnet";
   quiz: QuizQuestion;
 }
 export function isLessonSlug(value: unknown): value is LessonSlug {

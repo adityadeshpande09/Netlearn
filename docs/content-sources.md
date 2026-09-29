@@ -32,7 +32,7 @@ Verified 2026-09-09. The lesson prose, examples, questions, and quizzes are orig
 
 ## Content validation
 
-All five entries use the requested field names, ordered slugs/titles, three objectives, three sections with two body paragraphs each, three glossary concepts, and one quiz with three options. Section body lengths are approximately 370–400 words per lesson. Reading estimates include time to inspect the accompanying diagram and short check.
+All eight entries use the requested field names, ordered slugs/titles, three objectives, three sections with two body paragraphs each, three glossary concepts, and one quiz with three options. Reading estimates include time to inspect the accompanying diagram and short check. The original five lessons retain their slugs and order; the additional lessons are `arp`, `icmp-ping`, and `subnetting`, in that order.
 
 ## Subnet and simulation references
 
@@ -66,3 +66,36 @@ for resolving a next hop over the connected Ethernet network, and
 for TTL decrement, expiry, and checksum updates. A repair is successful only when
 the existing engine delivers the modeled request; the exercises do not claim to
 diagnose arbitrary real networks.
+
+## ARP, ICMP, and subnetting lessons
+
+Verified 2026-09-28. The new prose, diagrams, address examples, and quiz wording
+are original. These sources verify the protocol behavior rather than supply
+lesson text:
+
+| Topic                                 | Verified fact                                                                                                                                                                                            | Primary reference                                                                                                                                                                          |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| ARP exchange                          | Routing selects a next hop before address resolution; requests identify sender and target fields, and an ordinary broadcast request receives a direct reply. Operation values are 1 and 2.               | [RFC 826: Packet Generation and Packet Reception](https://www.rfc-editor.org/rfc/rfc826.html)                                                                                              |
+| ARP cache and Ethernet payload        | Hosts validate or remove stale mappings; queued traffic is distinct from the address-resolution exchange. ARP uses Ethernet type 0x0806.                                                                 | [RFC 1122, sections 2.3.2.1–2.3.2.2](https://www.rfc-editor.org/rfc/rfc1122.html), [IANA EtherTypes registry](https://www.iana.org/assignments/ieee-802-numbers/ieee-802-numbers.xhtml)    |
+| Local versus remote delivery          | A host compares the masked destination against its connected network, then selects direct or gateway delivery.                                                                                           | [RFC 1122, sections 3.3.1.1–3.3.1.2](https://www.rfc-editor.org/rfc/rfc1122.html)                                                                                                          |
+| Echo message fields                   | IPv4 ICMP uses Protocol 1, echo request type 8/code 0, and echo reply type 0/code 0. Replies preserve identifier, sequence, and data; the ICMP checksum covers the message.                              | [RFC 792: Echo or Echo Reply Message](https://www.rfc-editor.org/rfc/rfc792.html)                                                                                                          |
+| IPv4 checksum                         | The IP checksum covers the IPv4 header, separately from the ICMP checksum.                                                                                                                               | [RFC 791, section 3.1](https://www.rfc-editor.org/rfc/rfc791.html#section-3.1)                                                                                                             |
+| Ping results                          | Ping sends echo requests and displays corresponding replies and round-trip times. A timeout is a missing reply before the wait expires; it does not identify a specific failure.                         | [Microsoft: ping](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ping)                                                                                   |
+| Error reports and limited conclusions | ICMP feedback does not guarantee delivery. TTL expiry in transit can produce Time Exceeded; filters and rate limits can affect reports. Application success is a separate observation from ICMP success. | [RFC 792: Introduction and Time Exceeded Message](https://www.rfc-editor.org/rfc/rfc792.html), [RFC 1812, sections 4.3.2.7–4.3.3.1 and 5.3.1](https://www.rfc-editor.org/rfc/rfc1812.html) |
+| Prefixes and subnet arithmetic        | A /26 has 64 addresses. Subnet membership follows masked bits; the worked .70/26 example belongs to .64/26, ends at .127, and has the usual host range .65–.126.                                         | [RFC 4632, section 3.1](https://www.rfc-editor.org/rfc/rfc4632.html), [RFC 950: Address Masks](https://www.rfc-editor.org/rfc/rfc950.html)                                                 |
+| Small-prefix exceptions               | /31 point-to-point links use both addresses as endpoints without subnet-directed broadcast; /32 identifies a single address and can describe a host route.                                               | [RFC 3021, section 2.1](https://www.rfc-editor.org/rfc/rfc3021.html), [RFC 4632, section 3.1](https://www.rfc-editor.org/rfc/rfc4632.html)                                                 |
+
+The /26 ranges and quiz answer are independently checked against the existing
+subnet calculator. Historical class-based examples and obsolete subnet-zero
+restrictions in RFC 950 are not used in the lessons. The ICMP figure teaches a
+complete conceptual exchange and explicitly distinguishes it from NetLearn's
+current one-way request simulation. No echo reply, latency measurement, or ICMP
+error-packet simulation is implied by these content additions.
+
+### Linux-style terminal
+
+- [ip-route(8)](https://man7.org/linux/man-pages/man8/ip-route.8.html): route display conventions.
+- [ping(8)](https://man7.org/linux/man-pages/man8/ping.8.html): real echo request/reply behavior.
+- [traceroute(8)](https://man7.org/linux/man-pages/man8/traceroute.8.html): TTL probes and the ICMP option.
+
+The terminal labels its reduced simulation explicitly; it is not evidence of executing Linux commands on a real network.

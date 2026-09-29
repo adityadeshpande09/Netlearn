@@ -1,10 +1,10 @@
 # Hosting NetLearn
 
-The target is Vercel Hobby plus Supabase Free. The repository contains the
-application, database migration, email template, connection checks, and Vercel
-build settings. These files do not create a hosting project or prove a live
-Supabase connection. Git commits, pushes, and publication still follow the
-owner's separate approvals.
+The guest site is hosted on Vercel at **https://netlearn-ad.vercel.app**.
+Supabase is optional for accounts and synced lesson progress. The repository
+contains migrations, an email template, connection checks, and Vercel build
+settings; these files alone do not prove a live Supabase connection. Git commits,
+pushes, and publication still follow the owner's separate approvals.
 
 ## Low-cost setup
 
@@ -24,13 +24,19 @@ Verified September 21, 2026: [Vercel pricing](https://vercel.com/pricing),
 [Supabase pricing](https://supabase.com/pricing), and
 [SMTP requirements](https://supabase.com/docs/guides/auth/auth-smtp).
 
-## Connect Supabase first
+## Optional: connect Supabase
+
+Guest learning, labs, subnets, and browser playground saves work without this
+step. Enable accounts only after validating the intended Supabase project.
 
 1. Choose the owner's project on a Free organization. Keep its database
    password in the owner's password manager, outside the repository.
-2. Apply `supabase/migrations/202609150001_lesson_completions.sql` once. Do not
-   reset an existing database. Run `supabase/verify-setup.sql` in the same
-   project's SQL Editor and investigate every failed check.
+2. Apply the unapplied migrations in filename order: first
+   `202609150001_lesson_completions.sql`, then
+   `202609280001_extend_lessons.sql` for the eight-lesson curriculum. Do not
+   rerun applied migrations or reset an existing database. Run
+   `supabase/verify-setup.sql` in the same project's SQL Editor and investigate
+   every failed check. See [account setup](accounts-setup.md) for upgrade details.
 3. Configure Email authentication and SMTP as described in
    [account setup](accounts-setup.md). The reusable code email body is
    `supabase/templates/sign-in-code.html`.

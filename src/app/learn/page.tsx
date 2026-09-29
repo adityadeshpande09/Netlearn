@@ -5,8 +5,7 @@ import { lessons } from "@/content/lessons";
 import { LearningDashboard } from "@/features/learning/learning-dashboard";
 export const metadata: Metadata = {
   title: "Learning path",
-  description:
-    "Five introductory networking lessons, from local connections to routed packets. Read, predict, and track your progress.",
+  description: `${lessons.length} networking lessons, from local connections to ARP, ping, and subnetting. Read, predict, and track your progress.`,
 };
 export default function LearnPage() {
   const summaries = lessons.map(({ slug, order, title, summary, minutes }) => ({

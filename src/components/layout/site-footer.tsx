@@ -7,7 +7,7 @@ export function SiteFooter() {
         <Link href="/" className="brand" aria-label="NetLearn home">
           <Network size={20} /> NetLearn<span className="brand-period">.</span>
         </Link>
-        <p>A little less abstract. A lot more understandable.</p>
+        <p>Learn the idea. Try it in a network.</p>
         <Link href="/learn">
           Explore the learning path <ArrowUpRight size={15} />
         </Link>

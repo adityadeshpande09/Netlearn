@@ -2,17 +2,22 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { lessons } from "../../src/content/lessons";
 
-test("a learner can retry, complete all five lessons, and resume after reload", async ({
+test("a learner can retry, complete the expanded curriculum, and resume after reload", async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/learn");
-  await expect(page.getByText("0 of 5 lessons completed")).toBeVisible();
+  await expect(
+    page.getByText(`0 of ${lessons.length} lessons completed`),
+  ).toBeVisible();
   await page.getByRole("link", { name: "Begin the first lesson" }).click();
   for (const [index, lesson] of lessons.entries()) {
     await expect(page).toHaveURL("/learn/" + lesson.slug);
-    if (index === 0) {
+    await expect(page.locator(".lesson-heading .eyebrow")).toContainText(
+      `LESSON ${String(lesson.order).padStart(2, "0")} / ${String(lessons.length).padStart(2, "0")}`,
+    );
+    if (index === 0 || lesson.order >= 6) {
       await expect(
         page.getByRole("button", { name: "Check my answer" }),
       ).toBeDisabled();
@@ -41,7 +46,7 @@ test("a learner can retry, complete all five lessons, and resume after reload", 
     await page
       .getByRole("link", {
         name:
-          index === 4
+          index === lessons.length - 1
             ? "Back to your learning path"
             : "Next: " + lessons[index + 1]!.title,
         exact: true,
@@ -50,12 +55,79 @@ test("a learner can retry, complete all five lessons, and resume after reload", 
   }
   await expect(page).toHaveURL("/learn");
   await page.reload();
-  await expect(page.getByText("5 of 5 lessons completed")).toBeVisible();
+  await expect(
+    page.getByText(`${lessons.length} of ${lessons.length} lessons completed`),
+  ).toBeVisible();
   await expect(
     page.getByRole("progressbar", { name: "Lessons completed" }),
-  ).toHaveAttribute("value", "5");
+  ).toHaveAttribute("value", String(lessons.length));
+  await expect(
+    page.getByRole("heading", {
+      name: `${lessons.length} lessons. A stronger foundation.`,
+    }),
+  ).toBeVisible();
   expect(errors).toEqual([]);
 });
+
+test("the original five completions are retained when continuing with ARP", async ({
+  page,
+}) => {
+  const original = [
+    "network-basics",
+    "mac-vs-ip",
+    "switches",
+    "routers",
+    "packet-travel",
+  ];
+  await page.goto("/learn");
+  await page.evaluate((completed) => {
+    localStorage.setItem(
+      "netlearn.progress.v1",
+      JSON.stringify({ version: 1, completed }),
+    );
+  }, original);
+  await page.reload();
+  await expect(page.getByText("5 of 8 lessons completed")).toBeVisible();
+  await page.getByRole("link", { name: "Continue learning" }).click();
+  await expect(page).toHaveURL("/learn/arp");
+  const quiz = lessons.find((lesson) => lesson.slug === "arp")!.quiz;
+  const correct = quiz.options.find(
+    (option) => option.id === quiz.correctOptionId,
+  )!;
+  await page.getByRole("radio", { name: correct.text, exact: true }).check();
+  await page.getByRole("button", { name: "Check my answer" }).click();
+  await page.getByRole("button", { name: "Mark lesson complete" }).click();
+  await page.getByRole("link", { name: "Next: ICMP and Ping" }).click();
+  await page.reload();
+  expect(
+    await page.evaluate(() =>
+      JSON.parse(localStorage.getItem("netlearn.progress.v1") ?? "{}"),
+    ),
+  ).toEqual({ version: 1, completed: [...original, "arp"] });
+  await page.goto("/learn");
+  await expect(page.getByText("6 of 8 lessons completed")).toBeVisible();
+});
+
+for (const [slug, tool] of [
+  ["arp", "/labs/packet-journey"],
+  ["icmp-ping", "/labs/packet-journey"],
+  ["subnetting", "/tools/subnet"],
+] as const) {
+  test(`${slug} connects the lesson to its relevant tool and guided labs`, async ({
+    page,
+  }) => {
+    await page.goto("/learn/" + slug);
+    const practice = page.locator("aside").filter({
+      has: page.getByText("Put the idea to work", { exact: true }),
+    });
+    await expect(practice.locator(`a[href="${tool}"]`)).toBeVisible();
+    await expect(
+      practice.getByRole("link", { name: /guided labs/ }),
+    ).toHaveAttribute("href", "/labs/troubleshooting");
+    await practice.locator(`a[href="${tool}"]`).click();
+    await expect(page).toHaveURL(tool);
+  });
+}
 
 test("unavailable storage preserves progress while navigating within the tab", async ({
   page,
@@ -76,7 +148,9 @@ test("unavailable storage preserves progress while navigating within the tab", a
     .locator(".lesson-sidebar")
     .getByRole("link", { name: "Learning path", exact: true })
     .click();
-  await expect(page.getByText("1 of 5 lessons completed")).toBeVisible();
+  await expect(
+    page.getByText(`1 of ${lessons.length} lessons completed`),
+  ).toBeVisible();
   await expect(
     page.getByText("Progress is kept in this tab only."),
   ).toBeVisible();
@@ -88,7 +162,9 @@ test("unavailable storage preserves progress while navigating within the tab", a
     .locator("header")
     .getByRole("link", { name: "Learning path", exact: true })
     .click();
-  await expect(page.getByText("1 of 5 lessons completed")).toBeVisible();
+  await expect(
+    page.getByText(`1 of ${lessons.length} lessons completed`),
+  ).toBeVisible();
 });
 
 test("malformed progress is preserved and storage updates sync between tabs", async ({
@@ -104,7 +180,9 @@ test("malformed progress is preserved and storage updates sync between tabs", as
       JSON.stringify({ version: 1, completed: ["routers"] }),
     ),
   );
-  await expect(page.getByText("1 of 5 lessons completed")).toBeVisible();
+  await expect(
+    page.getByText(`1 of ${lessons.length} lessons completed`),
+  ).toBeVisible();
   await other.evaluate(() =>
     localStorage.setItem("netlearn.progress.v1", "unreadable"),
   );

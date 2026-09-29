@@ -42,7 +42,8 @@ export default async function LessonPage({
       <article className="lesson-article">
         <header className="lesson-heading">
           <p className="eyebrow">
-            LESSON {String(lesson.order).padStart(2, "0")} / 05{" "}
+            LESSON {String(lesson.order).padStart(2, "0")} /{" "}
+            {String(lessons.length).padStart(2, "0")}{" "}
             <span className="lesson-time">
               <Clock3 size={14} /> {lesson.minutes} min
             </span>
@@ -101,7 +102,7 @@ export default async function LessonPage({
           <div>
             <strong>Put the idea to work</strong>
             <p>
-              {lesson.slug === "mac-vs-ip" ? (
+              {lesson.slug === "mac-vs-ip" || lesson.slug === "subnetting" ? (
                 <Link href="/tools/subnet">
                   Explore address boundaries in the Subnet Visualizer →
                 </Link>
@@ -115,6 +116,11 @@ export default async function LessonPage({
                   Follow every decision in Packet Journey →
                 </Link>
               )}
+            </p>
+            <p>
+              <Link href="/labs/troubleshooting">
+                Use the evidence to repair a network in guided labs →
+              </Link>
             </p>
           </div>
         </aside>

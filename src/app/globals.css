@@ -1,7 +1,7 @@
 @import "tailwindcss";
 :root {
   color-scheme: light;
-  --background: #f7f9fc;
+  --background: #faf9f6;
   --surface: #ffffff;
   --surface-raised: #eef3f8;
   --foreground: #172a3e;
@@ -921,7 +921,7 @@ svg {
   overflow: hidden;
 }
 .continue-copy {
-  max-width: 80%;
+  max-width: 100%;
   position: relative;
   z-index: 1;
 }
@@ -1933,4 +1933,19 @@ progress::-moz-progress-bar {
 .text-action:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* A visible next step without implying other lessons are locked. */
+.curriculum-row.next-lesson {
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+}
+.next-lesson .curriculum-meta > span:last-child {
+  color: var(--accent);
+  font-weight: 650;
+}
+.desktop-nav a[aria-current="page"] {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.5rem;
 }

@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
+import { lessons } from "../../src/content/lessons";
 const backend = "http://127.0.0.1:54329";
 const userA = "10000000-0000-4000-8000-000000000001";
 const userB = "10000000-0000-4000-8000-000000000002";
@@ -159,12 +160,44 @@ test("sign-in imports guest progress only on request and sign-out restores the g
     .getByRole("complementary", { name: "How progress works" })
     .getByRole("link", { name: "Explore the learning path" })
     .click();
-  await expect(page.getByText("1 of 5 lessons completed")).toBeVisible();
+  await expect(
+    page.getByText(`1 of ${lessons.length} lessons completed`),
+  ).toBeVisible();
   expect(
     await page.evaluate(() =>
       JSON.parse(localStorage.getItem("netlearn.progress.v1") ?? "{}"),
     ),
   ).toEqual({ version: 1, completed: ["routers"] });
+});
+test("an account retains its earlier progress when completing the new ICMP lesson", async ({
+  page,
+  context,
+}) => {
+  const state = await mockAccounts(context);
+  await page.goto("/account");
+  await signIn(page);
+  await expect(page.getByRole("progressbar")).toHaveAttribute("max", "8");
+  await page.goto("/learn/icmp-ping");
+  const quiz = lessons.find((lesson) => lesson.slug === "icmp-ping")!.quiz;
+  const correct = quiz.options.find(
+    (option) => option.id === quiz.correctOptionId,
+  )!;
+  await page.getByRole("radio", { name: correct.text, exact: true }).check();
+  await page.getByRole("button", { name: "Check my answer" }).click();
+  await page.getByRole("button", { name: "Mark lesson complete" }).click();
+  await expect(
+    page.getByText("Progress synced to your account."),
+  ).toBeVisible();
+  expect(state.writes).toEqual([{ user_id: userA, lesson_slug: "icmp-ping" }]);
+  expect(state.rows.get(userA)).toEqual(
+    new Set(["network-basics", "icmp-ping"]),
+  );
+  await page.goto("/learn");
+  await page.reload();
+  await expect(page.getByText("2 of 8 lessons completed")).toBeVisible();
+  expect(
+    await page.evaluate(() => localStorage.getItem("netlearn.progress.v1")),
+  ).toBeNull();
 });
 test("switching accounts does not carry over the previous learner's completion", async ({
   page,

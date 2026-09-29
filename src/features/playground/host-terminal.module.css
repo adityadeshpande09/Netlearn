@@ -1,0 +1,139 @@
+.terminal {
+  margin-block: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: 1.5rem;
+}
+.heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.heading > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+.heading h2 {
+  font-size: 1.25rem;
+  margin: 0;
+}
+.heading span,
+.intro,
+.note {
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+.heading label {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  max-width: 100%;
+  min-width: 0;
+}
+.heading select {
+  max-width: 100%;
+  min-width: 0;
+}
+.intro {
+  margin-block: 1rem;
+  max-width: 65rem;
+}
+.examples {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.examples button {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  min-height: 44px;
+  font-size: 0.8125rem;
+  overflow-wrap: anywhere;
+}
+.examples button:hover {
+  border-color: var(--accent);
+}
+.output {
+  background: var(--network-bg);
+  color: #e7f0f6;
+  padding: 1rem;
+  border-radius: var(--radius-sm);
+  max-height: 24rem;
+  overflow: auto;
+  min-height: 6rem;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.8125rem;
+}
+.output > div + div {
+  margin-top: 1.5rem;
+}
+.output pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: inherit;
+  margin: 0.5rem 0 0;
+}
+.prompt {
+  color: var(--network-accent);
+  overflow-wrap: anywhere;
+}
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-block: 1rem;
+}
+.form label {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+.form input {
+  flex: 1 1 12rem;
+  min-width: 0;
+  min-height: 48px;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--foreground);
+  background: var(--surface);
+  font-family: var(--font-geist-mono), monospace;
+}
+.empty {
+  padding-block: 1rem;
+  color: var(--muted);
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+@media (max-width: 500px) {
+  .terminal {
+    padding: 1rem;
+  }
+  .form input {
+    flex-basis: calc(100% - 1rem);
+  }
+  .form button {
+    width: 100%;
+  }
+}

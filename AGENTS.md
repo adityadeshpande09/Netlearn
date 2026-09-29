@@ -6,14 +6,18 @@ Work in small, reviewable units following `docs/architecture.md` and
 `docs/development-plan.md`. The owner explicitly authorized completion of all Week 1 on September 10.
 Complete the foundation, five lessons, Packet Journey, Subnet Visualizer,
 Network Playground, local progress, and full validation as one reviewable batch.
-Week 1, saved playgrounds, the account/progress implementation, and detailed packet headers are committed and pushed. The owner authorized completing Week 3 guided troubleshooting labs and hosting preparation as one reviewed local commit. Live Supabase setup is deferred at the owner's request; Week 4 content is a separate unit. Follow docs/development-plan.md. This approval does not include a push or public deployment. Future commits, pushes, and public deployment still require explicit approval.
+Week 1–3 implementation is committed and pushed. The owner deployed the site on Vercel and authorized Week 4 implementation, live-site verification, and a README update on September 28. The current unit adds ARP, ICMP/Ping, and subnetting lessons, compatible progress/schema updates, and documentation. Live Supabase setup remains deferred. Follow docs/development-plan.md; staging, committing, pushing, and publishing this new unit require separate explicit approval.
 
 ## Git approval and communication
+
+The owner additionally requested a more natural, intuitive UI on September 28,
+while handling Supabase and SMTP themselves. This authorizes interface work and
+validation alongside the uncommitted Week 4 unit, not commits or deployment.
 
 These rules preserve the owner's explicit instructions from the linked plan.
 
 - Implement and validate one proposed commit at a time. Communicate progress.
-  The owner-approved Week 1 batch above is the current scope exception.
+  The current Week 4 unit above is the authorized implementation scope.
 - Before staging, inspect `git status`, `git diff`, and `git diff --stat`; inspect
   `git diff --cached` if anything is staged. Read untracked files explicitly:
   ordinary `git diff` does not show them.
@@ -22,7 +26,7 @@ These rules preserve the owner's explicit instructions from the linked plan.
 - Do not stage before approval. Report the completed scope, important files,
   architecture decisions, dependency changes, exact checks/results, manual
   checks, limitations, and the exact file list proposed for the commit.
-- Propose one concise human commit message, such as
+- Propose one concise commit message, such as
   `Add NetLearn lessons and tools`. The owner prefers short, simple commit messages. Conventional Commits are optional.
 - Ask for explicit approval and STOP. Silence or a request for an explanation
   is not approval. One approval authorizes one specific commit only.
@@ -44,8 +48,6 @@ These rules preserve the owner's explicit instructions from the linked plan.
   simulation algorithm as a sequence of UI timers.
 - Content belongs in typed content modules. Persistence belongs behind a
   progress repository interface. These folders are created when first needed.
-- No authentication, backend, database, AI tutor, multiplayer, gamification,
-  full IOS emulation, or advanced routing protocols in Week 1.
 - No `any`, unexplained type assertions, giant components, or abstractions
   without a real boundary. Comments explain reasons, not obvious operations.
 - Validate external/persisted data where it enters the application. Add Zod
@@ -97,3 +99,5 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+The owner additionally authorized the Playground host terminal (ip addr, ip route, ip neigh, ping and traceroute). Include this implementation and validation in the pending review; commit and publish approval remain separate.

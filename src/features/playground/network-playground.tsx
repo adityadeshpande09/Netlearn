@@ -2,6 +2,7 @@
 import { Laptop, Network, Router } from "lucide-react";
 import { SimulationSession } from "@/features/network/simulation-session";
 import { PlaygroundLibrary } from "./playground-library";
+import { HostTerminal } from "./host-terminal";
 import { DeviceEditor } from "./device-editor";
 import { CableEditor } from "./cable-editor";
 import { useNetworkWorkspace } from "./use-network-workspace";
@@ -130,6 +131,9 @@ export function NetworkPlayground() {
           <a href="#network-configuration" className="text-link">
             Configure devices & cables ↓
           </a>
+          <a href="#host-terminal" className="text-link">
+            Open host terminal ↓
+          </a>
           <p>
             Up to 8 devices. Each run starts with empty learning tables. This
             workspace lasts until you reload unless you save a snapshot above.
@@ -147,6 +151,15 @@ export function NetworkPlayground() {
       <SimulationSession
         key={revision}
         scenario={scenario}
+        renderTools={(event) => (
+          <HostTerminal
+            key={JSON.stringify(topology)}
+            topology={topology}
+            selectedId={selectedId}
+            onSelect={setSelectedId}
+            tables={event?.tables ?? { arp: {}, mac: {} }}
+          />
+        )}
         canvas={{
           positions,
           selectedId,

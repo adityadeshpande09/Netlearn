@@ -29,10 +29,11 @@ export function LearningDashboard({ lessons }: { lessons: LessonSummary[] }) {
     <>
       <div className="learning-intro">
         <div>
-          <p className="eyebrow">THE FOUNDATIONS</p>
+          <p className="eyebrow">LEARNING PATH</p>
           <h1>Your networking journey.</h1>
           <p>
-            Five small lessons. One clearer picture of how devices communicate.
+            Start with the basics, then try ARP, ping, and subnetting. Each
+            lesson includes a diagram and a question to try.
           </p>
         </div>
         <span className="course-pill">
@@ -44,39 +45,34 @@ export function LearningDashboard({ lessons }: { lessons: LessonSummary[] }) {
           <div className="continue-copy">
             <p className="eyebrow">
               {allDone
-                ? "THE CONNECTIONS ARE COMING TOGETHER"
+                ? "PATH COMPLETED"
                 : count
                   ? "PICK UP WHERE YOU LEFT OFF"
-                  : "EVERY JOURNEY STARTS WITH A CONNECTION"}
+                  : "YOUR FIRST LESSON"}
             </p>
             <h2 id="continue-heading">
-              {allDone ? "Five lessons. A stronger foundation." : next?.title}
+              {allDone
+                ? `${lessons.length} lessons. A stronger foundation.`
+                : next?.title}
             </h2>
             <p>
               {allDone
-                ? "You’ve completed the beginner path. Revisit any lesson whenever you want a refresher."
+                ? "You’ve completed the beginner path. Try a guided lab to put it into practice, or revisit a lesson below."
                 : next?.summary}
             </p>
             {next && (
               <Link
-                href={"/learn/" + next.slug}
+                href={allDone ? "/labs/troubleshooting" : "/learn/" + next.slug}
                 className="button button-inverse"
               >
                 {allDone
-                  ? "Revisit the first lesson"
+                  ? "Try a guided lab"
                   : count
                     ? "Continue learning"
                     : "Begin the first lesson"}{" "}
                 <ArrowRight size={17} />
               </Link>
             )}
-          </div>
-          <div className="course-symbol" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-            <span />
-            <BookOpen size={40} strokeWidth={1.25} />
           </div>
         </section>
         <section className="course-progress" aria-labelledby="progress-heading">
@@ -113,7 +109,15 @@ export function LearningDashboard({ lessons }: { lessons: LessonSummary[] }) {
           const complete = progress.completed.includes(lesson.slug);
           return (
             <li key={lesson.slug}>
-              <Link href={"/learn/" + lesson.slug} className="curriculum-row">
+              <Link
+                href={"/learn/" + lesson.slug}
+                className={
+                  "curriculum-row" +
+                  (progress.ready && !allDone && next?.slug === lesson.slug
+                    ? " next-lesson"
+                    : "")
+                }
+              >
                 <span
                   className={
                     "curriculum-index " + (complete ? "is-complete" : "")
@@ -134,7 +138,11 @@ export function LearningDashboard({ lessons }: { lessons: LessonSummary[] }) {
                     <Clock3 size={14} /> {lesson.minutes} min
                   </span>
                   <span className={complete ? "completed-label" : ""}>
-                    {complete ? "Completed" : "Ready to explore"}
+                    {complete
+                      ? "Completed"
+                      : progress.ready && next?.slug === lesson.slug
+                        ? "Up next"
+                        : "Not started"}
                   </span>
                 </div>
                 <ArrowUpRight size={19} className="curriculum-arrow" />

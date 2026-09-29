@@ -1,4 +1,5 @@
 import type { Lesson } from "./model";
+import { nextLessons } from "./next-lessons";
 export const lessons: Lesson[] = [
   {
     slug: "network-basics",
@@ -412,6 +413,7 @@ export const lessons: Lesson[] = [
       hint: "ARP must reach a next hop on the sender's local link.",
     },
   },
+  ...nextLessons,
 ];
 export function getLesson(slug: string) {
   return lessons.find((lesson) => lesson.slug === slug);

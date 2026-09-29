@@ -4,7 +4,7 @@ begin;
 
 create extension if not exists pgtap with schema extensions;
 set local search_path = public, extensions;
-select plan(28);
+select plan(31);
 
 insert into auth.users (id, email) values
   ('10000000-0000-4000-8000-000000000001', 'netlearn-test-a@example.test'),
@@ -92,6 +92,24 @@ select is(
   (select completed_at from public.lesson_completions where lesson_slug = 'network-basics'),
   now(),
   'The initial server timestamp is preserved when a duplicate is ignored'
+);
+select lives_ok(
+  $$insert into public.lesson_completions (user_id, lesson_slug) values
+    ('10000000-0000-4000-8000-000000000001', 'arp'),
+    ('10000000-0000-4000-8000-000000000001', 'icmp-ping'),
+    ('10000000-0000-4000-8000-000000000001', 'subnetting')
+    on conflict (user_id, lesson_slug) do nothing$$,
+  'Account A can complete each newly added lesson'
+);
+select results_eq(
+  $$select lesson_slug from public.lesson_completions order by lesson_slug$$,
+  $$values ('arp'::text), ('icmp-ping'::text), ('network-basics'::text), ('subnetting'::text)$$,
+  'New lesson completions coexist with the original completion'
+);
+select is(
+  (select completed_at from public.lesson_completions where lesson_slug = 'network-basics'),
+  now(),
+  'Adding new lessons leaves the original completion timestamp unchanged'
 );
 select throws_ok(
   $$insert into public.lesson_completions (user_id, lesson_slug)
@@ -200,8 +218,8 @@ select is(
       '10000000-0000-4000-8000-000000000001',
       '10000000-0000-4000-8000-000000000002'
     )),
-  3::bigint,
-  'Denied writes and ignored duplicates left the three expected rows'
+  6::bigint,
+  'Denied writes and ignored duplicates left the six expected rows'
 );
 select lives_ok(
   $$delete from auth.users where id = '10000000-0000-4000-8000-000000000001'$$,

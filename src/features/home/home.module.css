@@ -1,0 +1,260 @@
+.home {
+  background: #faf9f6;
+}
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 3.5rem;
+  padding-block: 4.5rem 3rem;
+}
+.hero > *,
+.path > * {
+  min-width: 0;
+}
+.kicker {
+  color: var(--secondary);
+  font-size: 0.8125rem;
+  font-weight: 650;
+  margin-bottom: 0.75rem;
+}
+.intro h1 {
+  font-size: clamp(2.75rem, 5vw, 4.25rem);
+  line-height: 1.06;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.055em;
+}
+.intro h1 span {
+  display: block;
+  color: var(--accent);
+}
+.description {
+  font-size: 1.125rem;
+  color: var(--muted);
+  max-width: 32rem;
+  line-height: 1.75;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  margin-block: 1.75rem 1rem;
+}
+.note,
+.demoNote {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.65;
+}
+.demoNote {
+  margin-top: 1rem;
+  padding-inline: 0.25rem;
+}
+.start {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding-block: 1.75rem;
+}
+.startTitle {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+.startTitle > svg {
+  color: var(--secondary);
+  margin-top: 0.2rem;
+}
+.startTitle h2 {
+  font-size: 1.4rem;
+  margin: 0;
+}
+.startTitle .kicker {
+  margin-bottom: 0.4rem;
+}
+.startBody > p {
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+.startBody a {
+  color: var(--accent);
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+.duration {
+  font-weight: 400;
+  color: var(--muted);
+  border-left: 1px solid var(--border);
+  padding-left: 0.5rem;
+}
+.practice {
+  padding-block: 3.5rem;
+  scroll-margin-top: 2rem;
+}
+.sectionHeading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+.sectionHeading h2 {
+  max-width: 30rem;
+  margin-bottom: 0;
+}
+.sectionHeading > p {
+  color: var(--muted);
+  max-width: 23rem;
+  font-size: 0.9375rem;
+}
+.activities {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.activity {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 1.25rem;
+  padding: 1.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition:
+    border-color var(--duration-fast),
+    background var(--duration-fast);
+}
+.activity:hover {
+  border-color: var(--accent);
+  background: #f4f7fc;
+}
+.activity > svg {
+  color: var(--accent);
+  margin-top: 0.2rem;
+}
+.activity .kicker {
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+.activity h3 {
+  margin-bottom: 0.6rem;
+}
+.activity p:not(.kicker) {
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+.detail {
+  display: block;
+  margin-top: 1.25rem;
+  color: var(--secondary);
+  font-size: 0.8125rem;
+  font-weight: 550;
+}
+.arrow {
+  align-self: center;
+}
+.path {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 4rem;
+  padding-block: 0.5rem 4rem;
+}
+.pathIntro {
+  padding-top: 1rem;
+}
+.pathIntro > p:not(.kicker) {
+  color: var(--muted);
+}
+.pathIntro > a {
+  margin-top: 1rem;
+  color: var(--accent);
+}
+.lessonList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lessonList li {
+  border-bottom: 1px solid var(--border);
+}
+.lessonList a {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) auto auto;
+  gap: 0.75rem;
+  padding: 1rem 0.5rem;
+  align-items: center;
+  border-radius: var(--radius-sm);
+  font-weight: 550;
+}
+.lessonList a:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.lessonNumber,
+.lessonList small {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-weight: 400;
+}
+@media (max-width: 900px) {
+  .hero {
+    gap: 2rem;
+  }
+  .sectionHeading {
+    display: block;
+  }
+  .sectionHeading > p {
+    margin-top: 1rem;
+    max-width: 36rem;
+  }
+  .path {
+    gap: 2rem;
+  }
+}
+@media (max-width: 800px) {
+  .hero,
+  .start,
+  .path {
+    grid-template-columns: 1fr;
+  }
+  .hero {
+    padding-block: 2.5rem;
+  }
+  .intro h1 span {
+    display: inline;
+  }
+  .activities {
+    grid-template-columns: 1fr;
+  }
+  .start {
+    gap: 1rem;
+  }
+  .practice {
+    padding-block: 2.5rem;
+  }
+  .activity {
+    padding: 1.25rem;
+    gap: 1rem;
+  }
+  .path {
+    gap: 1.5rem;
+    padding-bottom: 3rem;
+  }
+}
+@media (max-width: 420px) {
+  .activity {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .activity .arrow {
+    display: none;
+  }
+  .lessonList a {
+    gap: 0.5rem;
+  }
+}

@@ -39,10 +39,10 @@ This unit added no services or dependencies. It retains a one-way ICMP echo requ
 
 Packet details were committed as `9914e36` and pushed with owner approval.
 
-### Current unit — guided labs and hosting preparation
+### Guided labs and hosting preparation — committed and pushed
 
-The owner authorized finishing Week 3 and committing this unit locally, while
-deferring live Supabase setup. This approval does not include a push or deployment.
+The owner approved Week 3 completion and its commit/push as `30e9652`, then
+deployed the website on Vercel. Live Supabase setup remains deferred.
 
 - Guided troubleshooting at /labs/troubleshooting covers a missing default
   gateway, a disconnected router cable causing ARP failure, and TTL exhaustion.
@@ -55,13 +55,27 @@ deferring live Supabase setup. This approval does not include a push or deployme
   and read-only database verification. Empty account settings support guest
   mode; invalid supplied settings fail the build preflight.
 
-Live email delivery, authenticated database isolation, and a hosted deployment
-remain unverified release steps. A passing local build or mocked account test
-does not finish those checks. See accounts-setup.md and deployment.md.
+The hosted guest site is at https://netlearn-ad.vercel.app. Live email delivery
+and authenticated database isolation remain separate verification steps. A
+passing local build or mocked account test does not finish those checks. See
+accounts-setup.md and deployment.md.
 
-## Week 4 candidates
+## Week 4 — curriculum expansion and release review
 
-Dedicated ARP, ICMP, and subnetting lessons, additional guided exercises, and
-release verification can follow as separate reviewed units. They are not
-included in the Week 3 completion commit. Keep the current five-lesson database
-allowlist until a curriculum expansion updates and validates it deliberately.
+The owner authorized continuing Week 4 on September 28, alongside checking the
+deployed site and improving the repository README. This unit includes:
+
+1. Three original lessons: ARP, ICMP and Ping, and Subnetting, with diagrams,
+   prediction questions, hints, explanations, and links to related tools.
+2. Curriculum-derived totals and navigation, preserving existing progress.
+   An additive migration expands the account completion allowlist from five
+   to eight slugs without replacing rows or changing access policies.
+3. Content, progress, browser, accessibility, and schema validation, plus a
+   professional README and accurate deployment/model documentation.
+
+The unit does not expand the simulator's protocols, add cloud playgrounds, or
+configure a live Supabase project. More troubleshooting exercises and real
+account verification remain follow-up work. Report the finished diff and checks
+before requesting separate commit and release approval.
+
+The owner additionally requested a Playground host terminal. This checkout implements read-only address, route and neighbor displays plus simulated ping and TTL traceroute; configuration commands remain future work. Release and resume claims wait for deployment.

@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { Lesson } from "@/content/model";
+import { ProtocolDiagram } from "./protocol-diagrams";
 function Device({
   icon: Icon,
   name,
@@ -27,6 +28,8 @@ function Device({
   );
 }
 export function LessonDiagram({ type }: { type: Lesson["diagram"] }) {
+  if (type === "arp" || type === "echo" || type === "subnet")
+    return <ProtocolDiagram type={type} />;
   if (type === "addresses")
     return (
       <figure className="lesson-diagram">

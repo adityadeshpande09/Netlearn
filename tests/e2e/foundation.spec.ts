@@ -72,3 +72,23 @@ test("home and learning pages remain usable with 200 percent text", async ({
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   }
 });
+
+test("guided labs are discoverable from navigation and the simulation guide works by keyboard", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page
+    .getByRole("navigation", { name: "Main navigation", exact: true })
+    .getByRole("link", { name: "Guided labs", exact: true })
+    .press("Enter");
+  await expect(page).toHaveURL("/labs/troubleshooting");
+  const guide = page.locator(".simulation-guide");
+  await guide.locator("summary").press("Enter");
+  await expect(
+    guide.getByText("Follow the packet.", { exact: true }),
+  ).toBeVisible();
+  await guide.locator("summary").press("Enter");
+  await expect(
+    guide.getByText("Follow the packet.", { exact: true }),
+  ).toBeHidden();
+});

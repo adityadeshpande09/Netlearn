@@ -34,6 +34,39 @@ function json(value: unknown, status = 200) {
 }
 
 describe("Supabase progress adapter", () => {
+  it("accepts new lesson rows together with earlier account completions", async () => {
+    const { repository } = setup(async () =>
+      json([
+        { lesson_slug: "subnetting" },
+        { lesson_slug: "network-basics" },
+        { lesson_slug: "icmp-ping" },
+        { lesson_slug: "arp" },
+      ]),
+    );
+    expect(await repository.load("account-a")).toEqual([
+      "network-basics",
+      "arp",
+      "icmp-ping",
+      "subnetting",
+    ]);
+  });
+
+  it("writes every new lesson with the same append-only completion contract", async () => {
+    const { repository, requests } = setup(
+      async () => new Response(null, { status: 201 }),
+    );
+    await repository.add("account-a", ["arp", "icmp-ping", "subnetting"]);
+    expect(requests).toHaveLength(1);
+    expect(requests[0]!.headers.get("Prefer")).toContain(
+      "resolution=ignore-duplicates",
+    );
+    expect(await requests[0]!.json()).toEqual([
+      { user_id: "account-a", lesson_slug: "arp" },
+      { user_id: "account-a", lesson_slug: "icmp-ping" },
+      { user_id: "account-a", lesson_slug: "subnetting" },
+    ]);
+  });
+
   it("requests only the selected account's lesson rows and validates and normalizes them", async () => {
     const { repository, requests } = setup(async () =>
       json([

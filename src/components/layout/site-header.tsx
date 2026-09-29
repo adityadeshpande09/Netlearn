@@ -20,6 +20,7 @@ export function SiteHeader() {
     { href: "/", label: "Overview" },
     { href: "/learn", label: "Learning path" },
     { href: "/labs/packet-journey", label: "Packet Journey" },
+    { href: "/labs/troubleshooting", label: "Guided labs" },
     { href: "/tools/subnet", label: "Subnet" },
     { href: "/playground", label: "Playground" },
   ];

@@ -5,7 +5,10 @@ import dynamic from "next/dynamic";
 import { ChevronRight, Check, AlertCircle } from "lucide-react";
 import { PlaybackToolbar } from "./playback-toolbar";
 import { simulatePacket } from "@/domain/networking/simulator";
-import type { SimulationScenario } from "@/domain/networking/types";
+import type {
+  SimulationScenario,
+  SimulationEvent,
+} from "@/domain/networking/types";
 import { PacketInspector } from "./packet-inspector";
 import { DeviceInspector } from "./device-inspector";
 import { usePlayback } from "./use-playback";
@@ -26,9 +29,11 @@ export function SimulationSession({
   scenario,
   canvas = {},
   children,
+  renderTools,
 }: {
   scenario: SimulationScenario;
   children?: ReactNode;
+  renderTools?: (event: SimulationEvent | undefined) => ReactNode;
   canvas?: Omit<CanvasProps, "topology" | "event" | "playing" | "duration">;
 }) {
   const result = useMemo(() => simulatePacket(scenario), [scenario]);
@@ -44,6 +49,27 @@ export function SimulationSession({
   }
   return (
     <div className="simulation-session">
+      <details className="simulation-guide">
+        <summary>First time here? How to read the simulation</summary>
+        <ol>
+          <li>
+            <strong>Follow the packet.</strong> Use Send packet for playback, or
+            Next simulation step to move at your own pace.
+          </li>
+          <li>
+            <strong>Look inside.</strong> The packet inspector explains the
+            current headers. Expand a layer to see every field.
+          </li>
+          <li>
+            <strong>Check the evidence.</strong> Select a device for its tables,
+            or choose an event in the timeline to revisit a decision.
+          </li>
+        </ol>
+        <p>
+          Reset simulation rewinds the trace. It does not remove your devices or
+          change their settings.
+        </p>
+      </details>
       {result.errors.length > 0 && (
         <div className="simulation-errors" role="alert">
           <strong>Check the network configuration</strong>
@@ -100,6 +126,7 @@ export function SimulationSession({
         </div>
         {event && <PacketInspector event={event} />}
       </div>
+      {renderTools?.(event)}
       {children}
       <div className="inspect-device-control">
         <label htmlFor="inspect-device">Inspect a device</label>

@@ -1,231 +1,176 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  ArrowUpRight,
-  Check,
-  MousePointer2,
   BookOpen,
-  Lightbulb,
-  Network,
   Route,
+  Wrench,
+  Binary,
+  Network,
 } from "lucide-react";
 import { PacketPreview } from "@/features/home/packet-preview";
-
 import { lessons } from "@/content/lessons";
-const previews = [
-  { label: "Start here", icon: MousePointer2 },
-  { label: "Build your intuition", icon: Route },
-  { label: "Follow the frame", icon: Network },
+import styles from "@/features/home/home.module.css";
+
+const activities = [
+  {
+    href: "/labs/packet-journey",
+    icon: Route,
+    label: "Watch and inspect",
+    title: "Follow a packet",
+    copy: "See what switches and routers do, one step at a time.",
+    detail: "Start with a working network",
+  },
+  {
+    href: "/labs/troubleshooting",
+    icon: Wrench,
+    label: "Find and fix",
+    title: "Try the guided labs",
+    copy: "A packet has stopped. Read the evidence and test a repair.",
+    detail: "Three guided exercises",
+  },
+  {
+    href: "/tools/subnet",
+    icon: Binary,
+    label: "Work it out",
+    title: "Explore subnets",
+    copy: "Change a prefix and see the address range change with it.",
+    detail: "An interactive IPv4 calculator",
+  },
+  {
+    href: "/playground",
+    icon: Network,
+    label: "Build and experiment",
+    title: "Open the playground",
+    copy: "Connect your own devices, change their settings, and send a packet.",
+    detail: "Save networks in this browser",
+  },
 ];
-const previewLessons = lessons.slice(0, 3).map((lesson, index) => ({
-  ...lesson,
-  ...previews[index],
-  icon: previews[index]?.icon ?? BookOpen,
-}));
+
 export default function HomePage() {
   return (
-    <main id="main-content" tabIndex={-1}>
-      <section className="hero page-width">
-        <div className="hero-copy">
-          <p className="eyebrow">
-            <span className="eyebrow-line" /> LEARN WHAT HAPPENS BETWEEN DEVICES
+    <main id="main-content" tabIndex={-1} className={styles.home}>
+      <section className={`page-width ${styles.hero}`}>
+        <div className={styles.intro}>
+          <p className={styles.kicker}>
+            A hands-on introduction to computer networks
           </p>
           <h1>
             See networking <span>happen.</span>
           </h1>
-          <p className="hero-description">
-            Packets, switches, routers. Turn the things you can&apos;t see into
-            the things you finally understand.
+          <p className={styles.description}>
+            What actually happens after you press Send? Follow a packet, look
+            inside it, and learn how devices find each other.
           </p>
-          <div className="hero-actions">
+          <div className={styles.actions}>
             <Link href="/learn" className="button">
-              Start learning <ArrowRight size={18} />
+              Start learning <ArrowRight size={18} aria-hidden="true" />
             </Link>
-            <Link href="/labs/packet-journey" className="text-link">
-              Follow a packet <ArrowUpRight size={17} />
-            </Link>
+            <a href="#practice" className="text-link">
+              Explore the tools <ArrowRight size={17} aria-hidden="true" />
+            </a>
           </div>
-          <p className="hero-footnote">
-            <Check size={15} /> Beginner friendly <span>·</span> No account
-            needed
+          <p className={styles.note}>
+            {lessons.length} short lessons · Free to explore · No account needed
           </p>
         </div>
-        <PacketPreview />
+        <div className={styles.demo}>
+          <PacketPreview />
+          <p className={styles.demoNote}>
+            Try sending a packet above. In the full lab, you can pause at every
+            step and inspect the addresses.
+          </p>
+        </div>
       </section>
-      <div className="principles-strip">
-        <div className="page-width principles-inner">
-          <p>
-            FROM &ldquo;WHAT IS IT?&rdquo;
-            <br />
-            <strong>TO &ldquo;I GET IT.&rdquo;</strong>
-          </p>
-          <span>
-            <BookOpen size={20} /> Short, clear explanations
-          </span>
-          <span>
-            <Route size={20} /> Ideas you can see
-          </span>
-          <span>
-            <Lightbulb size={20} /> Questions that make it click
-          </span>
-        </div>
-      </div>
       <section
-        className="path-preview page-width"
-        aria-labelledby="path-heading"
+        className={`page-width ${styles.start}`}
+        aria-labelledby="start-heading"
       >
-        <div className="section-top">
+        <div className={styles.startTitle}>
+          <BookOpen size={23} aria-hidden="true" />
           <div>
-            <p className="eyebrow">YOUR FIRST FIVE CONNECTIONS</p>
-            <h2 id="path-heading">Start small. Connect the dots.</h2>
+            <p className={styles.kicker}>New to networking?</p>
+            <h2 id="start-heading">Start with one small question.</h2>
           </div>
-          <Link href="/learn" className="text-link">
-            View all 5 lessons <ArrowRight size={17} />
+        </div>
+        <div className={styles.startBody}>
+          <p>
+            {lessons[0]!.question} The first lesson explains what a local
+            network can do on its own.
+          </p>
+          <Link href="/learn/network-basics" className="text-link">
+            Read Network Basics{" "}
+            <span className={styles.duration}>{lessons[0]!.minutes} min</span>
+            <ArrowRight size={17} aria-hidden="true" />
           </Link>
         </div>
-        <div className="lesson-preview-grid">
-          {previewLessons.map((lesson) => (
-            <Link
-              key={lesson.slug}
-              href={"/learn/" + lesson.slug}
-              className="lesson-preview-card"
-            >
-              <div className="preview-card-top">
-                <span className="lesson-number">
-                  {String(lesson.order).padStart(2, "0")}
-                </span>
-                <lesson.icon size={24} />
-              </div>
-              <p className="tiny-label">{lesson.label}</p>
-              <h3>{lesson.title}</h3>
-              <p>{lesson.question}</p>
-              <span className="card-open">
-                Explore lesson <ArrowUpRight size={17} />
-              </span>
-            </Link>
-          ))}
-        </div>
-        <p className="path-preview-note">
-          Then bring it together with <Link href="/learn/routers">Routers</Link>{" "}
-          and <Link href="/learn/packet-travel">How a Packet Travels</Link>.
-        </p>
       </section>
       <section
-        id="how-it-works"
-        className="how-section page-width"
-        aria-labelledby="how-heading"
+        id="practice"
+        className={`page-width ${styles.practice}`}
+        aria-labelledby="practice-heading"
       >
-        <div className="how-heading">
-          <p className="eyebrow">UNDERSTANDING, ONE STEP AT A TIME</p>
-          <h2 id="how-heading">
-            Less memorizing.
-            <br />
-            More making sense.
-          </h2>
+        <div className={styles.sectionHeading}>
+          <div>
+            <p className={styles.kicker}>Learn by trying</p>
+            <h2 id="practice-heading">What would you like to figure out?</h2>
+          </div>
           <p>
-            Start with a question you actually have. Leave with an idea you can
-            explain.
+            Use a ready-made example, or build something of your own. You can
+            reset an experiment and try again.
           </p>
         </div>
-        <ol className="how-list">
-          <li>
-            <span>01</span>
-            <div>
-              <h3>Understand the idea</h3>
-              <p>
-                A focused explanation, in everyday language. No assumed
-                networking background.
-              </p>
-            </div>
-          </li>
-          <li>
-            <span>02</span>
-            <div>
-              <h3>See the connections</h3>
-              <p>
-                Follow a diagram to connect a new term to what a device actually
-                does.
-              </p>
-            </div>
-          </li>
-          <li>
-            <span>03</span>
-            <div>
-              <h3>Make a prediction</h3>
-              <p>
-                Try a question, get an explanation, and take another shot.
-                That&apos;s how it sticks.
-              </p>
-            </div>
-          </li>
-        </ol>
+        <div className={styles.activities}>
+          {activities.map(
+            ({ href, icon: Icon, label, title, copy, detail }) => (
+              <Link href={href} key={href} className={styles.activity}>
+                <Icon size={25} strokeWidth={1.7} aria-hidden="true" />
+                <div>
+                  <p className={styles.kicker}>{label}</p>
+                  <h3>{title}</h3>
+                  <p>{copy}</p>
+                  <span className={styles.detail}>{detail}</span>
+                </div>
+                <ArrowRight
+                  size={20}
+                  className={styles.arrow}
+                  aria-hidden="true"
+                />
+              </Link>
+            ),
+          )}
+        </div>
       </section>
       <section
-        className="tools-preview page-width"
-        aria-labelledby="tools-heading"
+        className={`page-width ${styles.path}`}
+        aria-labelledby="path-heading"
       >
-        <div className="section-top">
-          <div>
-            <p className="eyebrow">TRY IT. CHANGE IT. UNDERSTAND IT.</p>
-            <h2 id="tools-heading">A small network. Room to experiment.</h2>
-          </div>
+        <div className={styles.pathIntro}>
+          <p className={styles.kicker}>A little structure, if you want it</p>
+          <h2 id="path-heading">Build your understanding in order.</h2>
+          <p>
+            Each lesson has a diagram and a question to check your
+            understanding. Get an explanation, try again, and move on when
+            you’re ready.
+          </p>
+          <Link href="/learn" className="text-link">
+            View all {lessons.length} lessons{" "}
+            <ArrowRight size={17} aria-hidden="true" />
+          </Link>
         </div>
-        <div className="lesson-preview-grid">
-          {[
-            {
-              href: "/labs/packet-journey",
-              number: "01",
-              title: "Packet Journey",
-              copy: "Follow one packet across two networks. Inspect every decision, address, and table.",
-              action: "Follow the journey",
-            },
-            {
-              href: "/tools/subnet",
-              number: "02",
-              title: "Subnet Visualizer",
-              copy: "Move the network boundary. See the bits, address ranges, and smaller subnets change.",
-              action: "Explore an address",
-            },
-            {
-              href: "/playground",
-              number: "03",
-              title: "Network Playground",
-              copy: "Connect devices, configure their addresses, and discover why a packet arrives—or stops.",
-              action: "Build a network",
-            },
-          ].map((tool) => (
-            <Link
-              className="lesson-preview-card"
-              key={tool.href}
-              href={tool.href}
-            >
-              <div className="preview-card-top">
-                <span className="lesson-number">{tool.number}</span>
-                <Network size={24} />
-              </div>
-              <h3>{tool.title}</h3>
-              <p>{tool.copy}</p>
-              <span className="card-open">
-                {tool.action}
-                <ArrowUpRight size={17} />
-              </span>
-            </Link>
+        <ol className={styles.lessonList}>
+          {lessons.map((lesson) => (
+            <li key={lesson.slug}>
+              <Link href={`/learn/${lesson.slug}`}>
+                <span className={styles.lessonNumber}>
+                  {String(lesson.order).padStart(2, "0")}
+                </span>
+                <span>{lesson.title}</span>
+                <small>{lesson.minutes} min</small>
+                <ArrowRight size={16} aria-hidden="true" />
+              </Link>
+            </li>
           ))}
-        </div>
-        <p className="path-preview-note">
-          Ready to troubleshoot?{" "}
-          <Link href="/labs/troubleshooting">Try the guided labs</Link> and use
-          the packet trace to find what needs fixing.
-        </p>
-      </section>
-      <section className="closing-section page-width">
-        <div>
-          <p className="eyebrow">YOUR NETWORKING JOURNEY STARTS HERE</p>
-          <h2>One packet. A whole new perspective.</h2>
-        </div>
-        <Link href="/learn/network-basics" className="button">
-          Take the first lesson <ArrowRight size={18} />
-        </Link>
+        </ol>
       </section>
     </main>
   );

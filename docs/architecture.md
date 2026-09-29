@@ -1,6 +1,6 @@
 # NetLearn architecture
 
-The app combines five original lessons, local progress, and interactive teaching tools, including guided troubleshooting. It has twelve user-facing routes, plus custom 404 recovery. Supabase optionally provides email-code authentication and account lesson progress; guest learning and playground saves work without it.
+The app combines eight original lessons, local progress, and interactive teaching tools, including guided troubleshooting. It has fifteen user-facing routes, plus custom 404 recovery. Supabase optionally provides email-code authentication and account lesson progress; guest learning and playground saves work without it.
 
 ## Stack and rendering
 
@@ -56,9 +56,18 @@ IPv4 parsing accepts four strict decimal octets; arithmetic uses safe JavaScript
 
 ## Progress
 
+The curriculum's typed slug list drives progress validation and lesson totals. Week 4 appends ARP, ICMP/Ping, and subnetting without changing existing slugs or the guest storage version. An additive database migration expands the completion constraint to the same eight slugs, preserving existing rows and timestamps. Apply migrations in order before releasing the expanded curriculum with accounts enabled.
+
 A stable useSyncExternalStore subscription avoids browser storage reads during server rendering. Versioned completion records are validated and normalized. Invalid/future records are preserved. Failed reads or writes fall back to tab memory, retaining progress across client navigation; a full reload loses that fallback. Storage events synchronize successful writes across tabs on the same origin. Guest progress stores no personal data or quiz-answer history. With accounts configured, Supabase Auth receives the sign-in email and manages session cookies; the progress table stores user ID, lesson slug, and completion timestamp.
 
 ## Design and accessibility
+
+The homepage uses a scoped CSS module for its warm paper background, activity
+links, and compact curriculum list. It remains a Server Component; only the
+existing packet demonstration needs client state. Main navigation exposes guided
+labs directly. The learning dashboard identifies the next unfinished lesson and
+offers practice after completion. Simulation help uses a native disclosure so
+instructions are available without hiding the working controls or adding state.
 
 Shared color, spacing, type, radius, and duration tokens support the navy/blue/mint identity. Semantic headings, skip navigation, visible focus, native radio questions, live feedback, and Escape-to-close mobile navigation are shared conventions. Simulation controls, device selectors, and cable/configuration forms provide keyboard access. Scrollable tables are focusable. OS reduced motion suppresses moving particles and nonessential transitions while retaining step-by-step text.
 
@@ -66,7 +75,7 @@ Vitest/Testing Library cover observable logic and storage behavior. Playwright t
 
 ## Deployment
 
-The standard Next.js build targets Vercel. Guest mode requires no environment variables. Accounts require the two public Supabase settings, the completion migration, and email configuration described in accounts-setup.md. Deployment, pushes, and Git commits remain separate owner approvals. No Site is registered. See deployment.md for the release procedure.
+The standard Next.js build runs on Vercel at https://netlearn-ad.vercel.app. Guest mode requires no environment variables. Accounts require the two public Supabase settings, all completion migrations, and email configuration described in accounts-setup.md. Deployment, pushes, and Git commits remain separate owner approvals. See deployment.md for the release procedure.
 
 The deployment preflight reuses the application configuration parser and Next's
 environment loader. Normal builds validate settings before compilation: empty
@@ -90,3 +99,9 @@ The browser uses @supabase/ssr 0.12.7 with @supabase/supabase-js 2.116.0 for coo
 The existing synchronous guest repository is preserved separately. A pure asynchronous account store unions confirmed rows with pending completions and inserts only new rows, ignoring duplicates. It never auto-imports browser progress. Sign-out/account changes clear account memory and return to untouched guest progress. Unconfirmed account completions stay in tab memory, with visible failure/retry feedback and a leave-page warning while changes are pending. Refresh happens on login, window focus, reconnect, and explicit retry. There is no realtime subscription or cloud playground storage in this unit.
 
 Unit tests cover stale sessions, account changes, offline retries, duplicate writes, and response validation. A separate browser suite intercepts Supabase requests to exercise the real client and screens; it does not verify actual email delivery, token signatures, or the remote database. SQL tests and a real two-account/two-device check remain required before release. See accounts-setup.md for setup and exact validation boundaries.
+
+The host terminal delegates strict command parsing and output formatting to
+`domain/networking/host-commands.ts`. Diagnostics call the existing pure simulator;
+there is no second forwarding engine or server execution endpoint. The client
+component owns bounded per-host histories, drafts and diagnostic snapshots.
+`SimulationSession.renderTools` exposes the selected typed event to the terminal.

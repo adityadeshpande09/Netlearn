@@ -73,13 +73,19 @@ and test delivery and resend behavior before release. [Supabase SMTP guide](http
 
 ## Apply the schema
 
-The schema lives in
-`supabase/migrations/202609150001_lesson_completions.sql`. It creates:
+Apply the schema migrations in filename order:
+
+1. `supabase/migrations/202609150001_lesson_completions.sql` creates the table
+   for the original five lessons.
+2. `supabase/migrations/202609280001_extend_lessons.sql` adds `arp`,
+   `icmp-ping`, and `subnetting` to the permitted lesson slugs.
+
+Together they provide:
 
 - One row per account and lesson, with a database timestamp.
 - A foreign key that removes completion rows when the corresponding Auth user
   is removed.
-- A constraint accepting only the five current lesson slugs.
+- A constraint accepting only the eight current lesson slugs.
 - Authenticated select/insert grants with owner-only row policies.
 - No anonymous access and no client update/delete grants.
 
@@ -90,13 +96,23 @@ update permission. A normal upsert that updates conflicts is intentionally
 unsupported. Adding a lesson requires a new migration extending the slug
 constraint as well as a content update.
 
-Review the migration and apply it to the intended project once, using the
-project's SQL Editor or an established Supabase migration workflow. The migration
-deliberately fails if the table already exists so an unrelated table is not
-silently reused. Keep table grants and RLS enabled together. A filter in the
-browser is not an access boundary. [Supabase row security guide](https://supabase.com/docs/guides/database/postgres/row-level-security)
+For a new project, review and apply both migrations once, in that order, using
+the project's SQL Editor or an established Supabase migration workflow. The
+first migration deliberately fails if the table already exists so an unrelated
+table is not silently reused.
 
-After applying the migration, run `supabase/verify-setup.sql` in the same
+For an existing NetLearn project that already has the original table, apply
+only the unapplied `202609280001_extend_lessons.sql` migration before releasing
+the new lessons. It replaces the slug constraint in one atomic statement;
+existing rows, completion timestamps, grants, and row policies remain intact.
+Do not drop the table, reset the database, or rerun the original CREATE TABLE
+migration. Guest progress keeps the existing `netlearn.progress.v1` format and
+needs no reset or data conversion.
+
+Keep table grants and RLS enabled together. A filter in the browser is not an
+access boundary. [Supabase row security guide](https://supabase.com/docs/guides/database/postgres/row-level-security)
+
+After applying the migrations, run `supabase/verify-setup.sql` in the same
 project's SQL Editor. It reads catalog metadata without changing tables or
 creating test users. Review every failed check before continuing. These checks
 supplement the runtime account-isolation tests below.
@@ -108,7 +124,7 @@ responses or keys. Anonymous access must be denied. Passing these checks alone
 does not establish authenticated row isolation, SMTP delivery, or successful
 account writes.
 
-`src/lib/supabase/database.types.ts` mirrors this migration and adds an insert
+`src/lib/supabase/database.types.ts` mirrors this schema and adds an insert
 slug type from the curriculum. It is not a claim that database introspection
 already ran. After schema changes, generate and review types from the actual
 database; preserve the application's slug validation and append-only contract.
@@ -117,10 +133,10 @@ database; preserve the application's slug validation and append-only contract.
 ## Run database tests locally
 
 The pgTAP suite in `supabase/tests/lesson_completions.test.sql` uses two synthetic
-accounts and an anonymous role. Its 28 assertions cover ownership, invalid
-slugs, idempotent inserts, denied reads/writes, missing user claims, preserved
-timestamps, and account deletion. It runs inside a transaction and rolls its
-fixtures back.
+accounts and an anonymous role. Its 31 assertions cover ownership, all three
+new lesson slugs alongside existing progress, invalid slugs, idempotent inserts,
+denied reads/writes, missing user claims, preserved timestamps, and account
+deletion. It runs inside a transaction and rolls its fixtures back.
 
 Install the Supabase CLI and Docker using their supported setup instructions.
 In a disposable local checkout, initialize the local Supabase configuration if
@@ -137,17 +153,18 @@ Skip `supabase init` when configuration already exists. These commands are for
 the local test database; do not substitute a production database reset. The CLI
 test command requires the running local stack and pgTAP. [Supabase database tests](https://supabase.com/docs/guides/database/testing), [CLI test command](https://supabase.com/docs/reference/cli/supabase-test-db)
 
-**Implementation-time limitation:** Supabase CLI, Docker, and PostgreSQL client
-tools were unavailable in the development environment, so this SQL suite has
-not been executed there. No remote migration, email delivery, or real account
-test has been performed as part of writing these files.
+Keep local database test results separate from live project verification.
+Passing this suite does not establish that the intended remote project has
+received the new migration, that email delivery works, or that a real account
+can complete the new lessons. Record each of those checks for the release target.
 
 ## Check the connected app before release
 
 1. Complete a lesson as a guest. Sign into account A and confirm guest progress
    is offered for explicit import rather than added automatically. Import it,
    reload, and confirm the account retains it.
-2. Sign into account A in another browser/device. Complete a different lesson.
+2. Sign into account A in another browser/device. Complete one of the new lessons
+   (ARP, ICMP and Ping, or Subnetting) alongside an earlier completion.
    Return to the first device, focus the page or retry sync, and confirm both
    completions appear.
 3. Sign out, then sign into account B on the first device. Confirm account A's
@@ -185,5 +202,5 @@ guest suite sets both public settings to empty strings; the account suite sets
 only its loopback fixtures. These process values take priority over `.env.local`.
 The normal `.next` preview and actual environment files are left intact. Never
 set `NETLEARN_TEST_BUILD` in Vercel. The account suite covers explicit import,
-account switching, failed saves/retry, code errors, focus, and accessible
-responsive layouts.
+new lesson completion without losing earlier progress, account switching,
+failed saves/retry, code errors, focus, and accessible responsive layouts.

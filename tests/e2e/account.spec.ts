@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { lessonSlugs } from "../../src/content/model";
 test("the account page is accessible and learning remains open without a backend", async ({
   page,
 }) => {
@@ -34,6 +35,8 @@ test("the account page is accessible and learning remains open without a backend
     ),
   ).toBe(true);
   await page.getByRole("link", { name: "Go to your learning path" }).click();
-  await expect(page.getByText("0 of 5 lessons completed")).toBeVisible();
+  await expect(
+    page.getByText(`0 of ${lessonSlugs.length} lessons completed`),
+  ).toBeVisible();
   expect(errors).toEqual([]);
 });
