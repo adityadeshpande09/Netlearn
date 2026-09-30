@@ -29,9 +29,7 @@ test("a learner can retry, complete the expanded curriculum, and resume after re
       await expect(
         page.getByText("Not quite. Think it through once more."),
       ).toBeVisible();
-      await expect(
-        page.getByRole("button", { name: "Mark lesson complete" }),
-      ).toHaveCount(0);
+      await expect(page.locator(".completion-status")).toHaveCount(0);
       await page.getByRole("button", { name: "Give me a hint" }).click();
       await expect(page.locator("#quiz-hint")).toHaveText(lesson.quiz.hint);
     }
@@ -41,7 +39,6 @@ test("a learner can retry, complete the expanded curriculum, and resume after re
     await page.getByRole("radio", { name: correct.text, exact: true }).check();
     await page.getByRole("button", { name: "Check my answer" }).click();
     await expect(page.getByText("Exactly. You’ve got the idea.")).toBeVisible();
-    await page.getByRole("button", { name: "Mark lesson complete" }).click();
     await expect(page.getByRole("status")).toHaveText("Lesson completed");
     await page
       .getByRole("link", {
@@ -96,7 +93,9 @@ test("the original five completions are retained when continuing with ARP", asyn
   )!;
   await page.getByRole("radio", { name: correct.text, exact: true }).check();
   await page.getByRole("button", { name: "Check my answer" }).click();
-  await page.getByRole("button", { name: "Mark lesson complete" }).click();
+  await expect(page.locator(".completion-status")).toHaveText(
+    "Lesson completed",
+  );
   await page.getByRole("link", { name: "Next: ICMP and Ping" }).click();
   await page.reload();
   expect(
@@ -142,7 +141,9 @@ test("unavailable storage preserves progress while navigating within the tab", a
   await page.goto("/learn/network-basics");
   await page.getByRole("radio").first().check();
   await page.getByRole("button", { name: "Check my answer" }).click();
-  await page.getByRole("button", { name: "Mark lesson complete" }).click();
+  await expect(page.locator(".completion-status")).toHaveText(
+    "Lesson completed",
+  );
   await page.getByRole("link", { name: "Next: MAC vs IP" }).click();
   await page
     .locator(".lesson-sidebar")
@@ -192,7 +193,9 @@ test("malformed progress is preserved and storage updates sync between tabs", as
   await page.getByRole("link", { name: "Begin the first lesson" }).click();
   await page.getByRole("radio").first().check();
   await page.getByRole("button", { name: "Check my answer" }).click();
-  await page.getByRole("button", { name: "Mark lesson complete" }).click();
+  await expect(page.locator(".completion-status")).toHaveText(
+    "Lesson completed",
+  );
   expect(
     await page.evaluate(() => localStorage.getItem("netlearn.progress.v1")),
   ).toBe("unreadable");

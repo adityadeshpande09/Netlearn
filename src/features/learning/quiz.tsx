@@ -29,13 +29,19 @@ export function Quiz({
         <Lightbulb size={16} /> MAKE A PREDICTION
       </p>
       <h2 id="knowledge-check">Put the pieces together.</h2>
+      <p>Submit a correct answer to complete this lesson automatically.</p>
+      {!progress.ready && (
+        <div className="storage-notice">
+          <ProgressStatus />
+        </div>
+      )}
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          if (answer)
-            setResult(
-              answer === quiz.correctOptionId ? "correct" : "incorrect",
-            );
+          if (!answer || !progress.ready) return;
+          const correct = answer === quiz.correctOptionId;
+          setResult(correct ? "correct" : "incorrect");
+          if (correct && !completed) completeLesson(slug);
         }}
       >
         <fieldset>
@@ -70,7 +76,7 @@ export function Quiz({
           <button
             type="submit"
             className="button"
-            disabled={!answer || result === "correct"}
+            disabled={!answer || !progress.ready || result === "correct"}
           >
             Check my answer <ArrowRight size={16} />
           </button>
@@ -115,19 +121,10 @@ export function Quiz({
       </form>
       {(result === "correct" || completed) && (
         <div className="lesson-completion">
-          {completed ? (
+          {completed && (
             <p className="completion-status" role="status">
               <Check size={18} /> Lesson completed
             </p>
-          ) : (
-            <button
-              type="button"
-              className="button button-secondary"
-              disabled={!progress.ready}
-              onClick={() => completeLesson(slug)}
-            >
-              <Check size={17} /> Mark lesson complete
-            </button>
           )}
           {completed && (
             <Link
@@ -140,13 +137,14 @@ export function Quiz({
               <ArrowRight size={16} />
             </Link>
           )}
-          {(progress.scope === "account" ||
-            progress.syncStatus === "error" ||
-            progress.syncStatus === "loading") && (
-            <div className="storage-notice">
-              <ProgressStatus />
-            </div>
-          )}
+          {progress.ready &&
+            (progress.scope === "account" ||
+              progress.syncStatus === "error" ||
+              progress.syncStatus === "loading") && (
+              <div className="storage-notice">
+                <ProgressStatus />
+              </div>
+            )}
           {progress.persistence === "memory" && (
             <p className="storage-notice">
               Browser storage is unavailable or unreadable. Your progress is

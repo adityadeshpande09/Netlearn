@@ -184,7 +184,6 @@ test("an account retains its earlier progress when completing the new ICMP lesso
   )!;
   await page.getByRole("radio", { name: correct.text, exact: true }).check();
   await page.getByRole("button", { name: "Check my answer" }).click();
-  await page.getByRole("button", { name: "Mark lesson complete" }).click();
   await expect(
     page.getByText("Progress synced to your account."),
   ).toBeVisible();
@@ -220,20 +219,12 @@ test("failed account saves remain visible and can be retried without affecting g
   await signIn(page);
   state.failWrites = true;
   await page.goto("/learn/mac-vs-ip");
-  await page.getByRole("radio").first().check();
+  const quiz = lessons.find((lesson) => lesson.slug === "mac-vs-ip")!.quiz;
+  const correct = quiz.options.find(
+    (option) => option.id === quiz.correctOptionId,
+  )!;
+  await page.getByRole("radio", { name: correct.text, exact: true }).check();
   await page.getByRole("button", { name: "Check my answer" }).click();
-  // The correct option is read from the curriculum, below, if the first was not correct.
-  const complete = page.getByRole("button", { name: "Mark lesson complete" });
-  if (!(await complete.isVisible())) {
-    const { lessons } = await import("../../src/content/lessons");
-    const quiz = lessons.find((lesson) => lesson.slug === "mac-vs-ip")!.quiz;
-    const correct = quiz.options.find(
-      (option) => option.id === quiz.correctOptionId,
-    )!;
-    await page.getByRole("radio", { name: correct.text, exact: true }).check();
-    await page.getByRole("button", { name: "Check my answer" }).click();
-  }
-  await complete.click();
   await expect(
     page.getByText("Sync paused. Unsaved progress is kept in this tab only."),
   ).toBeVisible();
@@ -321,21 +312,20 @@ test("a lesson explains failed identity checks and offers recovery before saving
     (option) => option.id === quiz.correctOptionId,
   )!;
   await page.getByRole("radio", { name: correct.text, exact: true }).check();
-  await page.getByRole("button", { name: "Check my answer" }).click();
   await expect(
     page.getByText(
       "Could not check your sign-in. Retry before saving progress.",
     ),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Mark lesson complete" }),
+    page.getByRole("button", { name: "Check my answer" }),
   ).toBeDisabled();
   state.failUser = false;
   await page.getByRole("button", { name: "Retry sync" }).click();
   await expect(
-    page.getByRole("button", { name: "Mark lesson complete" }),
+    page.getByRole("button", { name: "Check my answer" }),
   ).toBeEnabled();
-  await page.getByRole("button", { name: "Mark lesson complete" }).click();
+  await page.getByRole("button", { name: "Check my answer" }).click();
   await expect(
     page.getByText("Progress synced to your account."),
   ).toBeVisible();
