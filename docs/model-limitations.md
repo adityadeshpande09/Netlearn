@@ -25,6 +25,16 @@ of a real network. Students can inspect the original and attempted traces.
 Attempts, hints, and solved state are page-local and reset on reload or when
 switching exercises. These labs do not mark lessons complete or sync to accounts.
 
+## Route selection
+
+The route-selection visualizer performs a routing-table lookup only. It does
+not verify link reachability or ARP, and it does not send a packet. Example mode
+uses an isolated table and never changes the current topology. Equal-prefix
+ties keep table order, with connected routes first; this is a model convention,
+not an implementation of administrative distance, metrics, or ECMP. A default
+route matches every valid IPv4 input, including addresses the simulator would
+not accept as host endpoints.
+
 ## Subnet arithmetic
 
 The calculator accepts /0–/32 independently of the Playground's Ethernet constraints. A /31 assumes a point-to-point link with two endpoints and no subnet-directed broadcast; /32 names one address. /0 covers IPv4 and represents the default-route prefix. Its theoretical host count is arithmetic, not an inventory of assignable internet addresses; 255.255.255.255 is limited broadcast.

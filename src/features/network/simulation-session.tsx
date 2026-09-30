@@ -145,6 +145,11 @@ export function SimulationSession({
       </div>
       {selected && (
         <DeviceInspector
+          destination={
+            scenario.devices.find(
+              (device) => device.id === scenario.destinationId,
+            )?.interfaces[0]?.ipAddress ?? ""
+          }
           device={selected}
           tables={event?.tables ?? { arp: {}, mac: {} }}
         />

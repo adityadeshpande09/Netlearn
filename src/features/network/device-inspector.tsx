@@ -1,11 +1,13 @@
-import { routerRoutes } from "@/domain/networking/topology";
+import { RouteSelection } from "./route-selection";
 import type { NetworkDevice, TableSnapshot } from "@/domain/networking/types";
 export function DeviceInspector({
   device,
   tables,
+  destination = "",
 }: {
   device: NetworkDevice;
   tables: TableSnapshot;
+  destination?: string;
 }) {
   const arp =
     (Object.hasOwn(tables.arp, device.id)
@@ -139,34 +141,11 @@ export function DeviceInspector({
         </div>
       )}
       {device.kind === "router" && (
-        <div
-          className="device-table-wrap"
-          tabIndex={0}
-          role="region"
-          aria-label={device.name + " table, scroll horizontally if needed"}
-        >
-          <table>
-            <caption>Routing table · longest matching prefix wins</caption>
-            <thead>
-              <tr>
-                <th scope="col">Network</th>
-                <th scope="col">Next hop</th>
-                <th scope="col">Interface</th>
-              </tr>
-            </thead>
-            <tbody>
-              {routerRoutes(device).map((route, index) => (
-                <tr key={index}>
-                  <td className="mono">
-                    {route.network}/{route.prefixLength}
-                  </td>
-                  <td className="mono">{route.nextHop ?? "Connected"}</td>
-                  <td>{portName(route.interfaceId)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <RouteSelection
+          key={device.id + ":" + destination}
+          router={device}
+          initialDestination={destination}
+        />
       )}
     </section>
   );

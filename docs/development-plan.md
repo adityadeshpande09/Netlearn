@@ -79,3 +79,18 @@ account verification remain follow-up work. Report the finished diff and checks
 before requesting separate commit and release approval.
 
 The owner additionally requested a Playground host terminal. This checkout implements read-only address, route and neighbor displays plus simulated ping and TTL traceroute; a subsequent approved unit adds `ip route add default via <IPv4>` and a resettable missing-gateway repair exercise. Other configuration commands remain future work. Release and resume claims wait for deployment.
+
+## September 30 status and current unit
+
+Week 4 lessons and the host terminal, gateway repair, dark mode, and automatic
+lesson completion after a correct answer have been committed and deployed.
+Week 2 live account/Supabase/SMTP work is paused at the owner's request.
+
+The current authorized unit is the route-selection visualizer. Selecting a
+router in Playground, Packet Journey, or guided labs exposes a destination
+lookup using the same pure function as forwarding. It explains matching and
+nonmatching routes, longest-prefix selection, next hop, outgoing interface,
+default routes, and no-match cases. A separate example table demonstrates
+overlapping /16 and /24 routes without changing the network. Binary comparison
+and explicit equal-prefix limitations support the explanation. Commit and
+deployment remain subject to owner review and approval.

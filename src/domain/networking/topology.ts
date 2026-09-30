@@ -43,23 +43,64 @@ export function routerRoutes(router: RouterDevice): RouteEntry[] {
   });
   return [...connected, ...router.routes];
 }
+export interface RouteCandidate {
+  route: RouteEntry;
+  source: "Connected" | "Static";
+  matches: boolean;
+  valid: boolean;
+  selected: boolean;
+}
+/** Shared lookup for forwarding and explanation; equal prefixes keep table order. */
+export function explainRouteSelection(
+  router: RouterDevice,
+  destination: string,
+) {
+  const ip = parseIpv4(destination);
+  const routes = routerRoutes(router);
+  const connectedCount = routes.length - router.routes.length;
+  let winner = -1;
+  const candidates: RouteCandidate[] = routes.map((route, index) => {
+    const network = parseIpv4(route.network);
+    const valid = network !== null && validPrefix(route.prefixLength);
+    const matches =
+      ip !== null &&
+      network !== null &&
+      valid &&
+      networkNumber(ip, route.prefixLength) ===
+        networkNumber(network, route.prefixLength);
+    if (
+      matches &&
+      (winner === -1 || route.prefixLength > routes[winner]!.prefixLength)
+    )
+      winner = index;
+    return {
+      route,
+      source: index < connectedCount ? "Connected" : "Static",
+      matches,
+      valid,
+      selected: false,
+    };
+  });
+  const selected = candidates[winner];
+  if (selected) selected.selected = true;
+  return {
+    validDestination: ip !== null,
+    candidates,
+    selected: selected?.route,
+    tied: selected
+      ? candidates.filter(
+          (candidate) =>
+            candidate.matches &&
+            candidate.route.prefixLength === selected.route.prefixLength,
+        ).length > 1
+      : false,
+  };
+}
 export function selectRoute(
   router: RouterDevice,
   destination: string,
 ): RouteEntry | undefined {
-  const ip = parseIpv4(destination);
-  if (ip === null) return undefined;
-  return routerRoutes(router)
-    .filter((route) => {
-      const network = parseIpv4(route.network);
-      return (
-        network !== null &&
-        validPrefix(route.prefixLength) &&
-        networkNumber(ip, route.prefixLength) ===
-          networkNumber(network, route.prefixLength)
-      );
-    })
-    .sort((left, right) => right.prefixLength - left.prefixLength)[0];
+  return explainRouteSelection(router, destination).selected;
 }
 export function validateTopology(topology: NetworkTopology): string[] {
   const errors: string[] = [];

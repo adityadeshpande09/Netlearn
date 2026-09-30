@@ -10,6 +10,7 @@ Make invisible networking processes visible. Learn through lessons with predicti
 
 - **Learn the foundations.** Eight lessons combine original explanations, diagrams, key terms, and retryable questions.
 - **Follow a packet.** Step through ARP, switching, and routing. Inspect Ethernet, ARP, IPv4, and ICMP fields, hexadecimal bytes, TTL changes, and calculated checksums.
+- **Understand route selection.** Select a router to compare matching prefixes, next hops and interfaces. Try isolated overlapping-route examples and inspect the winning prefix in binary.
 - **Troubleshoot a network.** Diagnose a missing gateway, a disconnected cable, or an expired TTL; choose a repair and inspect the simulator's result.
 - **Explore subnets.** Change an IPv4 prefix, inspect the binary boundary, compare address ranges, and split networks into smaller subnets.
 - **Build your own topology.** Connect and configure up to eight devices, test delivery, and save up to 20 named playgrounds in your browser. Native forms provide alternatives to dragging.

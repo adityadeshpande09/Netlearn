@@ -40,6 +40,16 @@ Every event also carries a typed packet-header snapshot. Pure serializers in pac
 
 The homepage animation is a simplified fixed illustration; it makes no protocol decisions. The lab and Playground use the actual event engine. See [model limitations](model-limitations.md) for explicit teaching assumptions.
 
+## Route selection
+
+The router inspector and simulator share `explainRouteSelection` in the pure
+topology module; `selectRoute` returns its selected entry. The explanation
+retains routing-table order and labels every candidate's source and match.
+The route-selection component owns only the lookup destination and example
+mode. It does not mutate topology or simulation state. Its example table uses
+the same lookup, and changing the selected router or scenario destination
+resets the lookup context.
+
 ## Guided troubleshooting
 
 Typed exercise content supplies symptoms, repair choices, hints, and explanations.
