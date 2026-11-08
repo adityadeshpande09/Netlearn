@@ -15,7 +15,9 @@ test("theme follows system initially, persists explicit choice and works by keyb
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await toggle.click();
-  await page.getByRole("link", { name: "Playground", exact: true }).click();
+  await page
+    .getByRole("link", { name: "Troubleshooting Labs", exact: true })
+    .click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await expect(toggle).toHaveAttribute("aria-pressed", "true");
 });
@@ -27,7 +29,7 @@ test("dark pages have accessible contrast and fit mobile and enlarged text", asy
   for (const path of [
     "/",
     "/learn/arp",
-    "/playground",
+    "/labs/packet-journey",
     "/tools/subnet",
     "/labs/troubleshooting",
   ]) {

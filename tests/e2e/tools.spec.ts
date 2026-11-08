@@ -106,65 +106,11 @@ test("subnet arithmetic, validation, binary boundary, splitting, and special pre
   await expect(page.locator("#subnet-error")).toBeVisible();
   await expect(page.locator(".subnet-result")).toHaveCount(0);
 });
-test("playground edits cables and gateways and recalculates the journey", async ({
-  page,
-}) => {
-  const errors: string[] = [];
-  page.on("pageerror", (e) => errors.push(e.message));
-  await page.goto("/playground");
-  await expect(page.locator(".react-flow__node")).toHaveCount(5);
-  await page.getByLabel("Connected cable").selectOption("link-a");
-  await page.getByRole("button", { name: "Remove cable", exact: true }).click();
-  await page.locator(".simulation-timeline button").last().click();
-  await expect(page.locator(".event-explanation")).toContainText(
-    "No device answers ARP",
-  );
-  await page.getByLabel("First port").selectOption("pc-a:p1");
-  await page.getByLabel("Second port").selectOption("switch-a:p1");
-  await page.getByRole("button", { name: "Connect ports" }).click();
-  await page.locator(".simulation-timeline button").last().click();
-  await expect(page.locator(".event-explanation h2")).toHaveText(
-    "Packet delivered to PC-B",
-  );
-  await page.getByLabel("Inspect a device").selectOption("pc-a");
-  await page.getByLabel("Default gateway", { exact: true }).fill("");
-  await page.getByRole("button", { name: "Apply configuration" }).click();
-  await expect(page.locator(".simulation-step-count")).toContainText(
-    "Step 1 /",
-  );
-  await page.locator(".simulation-timeline button").last().click();
-  await expect(page.locator(".event-explanation")).toContainText(
-    "No default gateway",
-  );
-  expect(errors).toEqual([]);
-});
-test("a network can be built using the keyboard-accessible forms", async ({
-  page,
-}) => {
-  await page.goto("/playground");
-  await page.getByLabel("Start with").selectOption("blank");
-  await page.getByRole("button", { name: "Add computer", exact: true }).click();
-  await page.getByRole("button", { name: "Add computer", exact: true }).click();
-  await page.getByRole("button", { name: "Add switch", exact: true }).click();
-  await page.getByLabel("First port").selectOption({ label: "PC 6 · eth0" });
-  await page
-    .getByLabel("Second port")
-    .selectOption({ label: "Switch 8 · Port 1" });
-  await page.getByRole("button", { name: "Connect ports" }).focus();
-  await page.keyboard.press("Enter");
-  await page.getByLabel("First port").selectOption({ label: "PC 7 · eth0" });
-  await page
-    .getByLabel("Second port")
-    .selectOption({ label: "Switch 8 · Port 2" });
-  await page.getByRole("button", { name: "Connect ports" }).focus();
-  await page.keyboard.press("Enter");
-  await page.locator(".simulation-timeline button").last().click();
-  await expect(page.locator(".event-explanation h2")).toHaveText(
-    "Packet delivered to PC 7",
-  );
-  await expect(page.locator(".react-flow__node")).toHaveCount(3);
-});
-for (const route of ["/labs/packet-journey", "/tools/subnet", "/playground"]) {
+for (const route of [
+  "/labs/packet-journey",
+  "/tools/subnet",
+  "/labs/troubleshooting",
+]) {
   test(
     route +
       " is accessible and fits mobile, tablet, desktop, and enlarged text",
@@ -218,61 +164,3 @@ for (const route of ["/labs/packet-journey", "/tools/subnet", "/playground"]) {
     },
   );
 }
-
-test("configuration saves preserve keyboard focus and route edits preserve drafts", async ({
-  page,
-}) => {
-  await page.goto("/playground");
-  await page.getByLabel("Device name", { exact: true }).fill("My computer");
-  const apply = page.getByRole("button", {
-    name: "Apply configuration",
-    exact: true,
-  });
-  await apply.focus();
-  await page.keyboard.press("Enter");
-  await expect(apply).toBeFocused();
-  await page.getByLabel("Inspect a device").selectOption("router-r1");
-  await page
-    .getByLabel("Device name", { exact: true })
-    .fill("Draft router name");
-  await page.getByText("Static routes (optional)", { exact: true }).click();
-  await page.getByLabel("Destination network / prefix").fill("172.16.0.0/24");
-  await page.getByLabel("Next-hop IPv4 address").fill("10.0.0.2");
-  await page.getByLabel("Outgoing interface").selectOption("p2");
-  const add = page.getByRole("button", {
-    name: "Add static route",
-    exact: true,
-  });
-  await add.focus();
-  await page.keyboard.press("Enter");
-  await expect(add).toBeFocused();
-  await expect(page.locator(".route-editor")).toHaveAttribute("open", "");
-  await expect(page.getByLabel("Device name", { exact: true })).toHaveValue(
-    "Draft router name",
-  );
-  await page
-    .getByRole("button", { name: "Remove route 172.16.0.0/24", exact: true })
-    .click();
-  await expect(add).toBeFocused();
-  await expect(page.getByLabel("Device name", { exact: true })).toHaveValue(
-    "Draft router name",
-  );
-  await page.getByLabel("Connected cable").selectOption("link-a");
-  const remove = page.getByRole("button", {
-    name: "Remove cable",
-    exact: true,
-  });
-  await remove.focus();
-  await page.keyboard.press("Enter");
-  await expect(remove).toBeFocused();
-  await page.getByLabel("First port").selectOption("pc-a:p1");
-  await page.getByLabel("Second port").selectOption("switch-a:p1");
-  const connect = page.getByRole("button", {
-    name: "Connect ports",
-    exact: true,
-  });
-  await connect.focus();
-  await page.keyboard.press("Enter");
-  await expect(connect).toBeFocused();
-  await expect(page.getByLabel("First port")).toHaveValue("");
-});

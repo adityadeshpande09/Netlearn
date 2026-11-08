@@ -17,7 +17,7 @@ export default function TroubleshootingPage() {
         <span>Troubleshooting</span>
       </nav>
       <header className="tool-heading">
-        <p className="eyebrow">THREE NETWORKS TO REPAIR</p>
+        <p className="eyebrow">TROUBLESHOOTING LABS</p>
         <h1>Find the fault. Follow the packet.</h1>
         <p>
           Investigate a broken network, make one change, and use the trace to
@@ -29,8 +29,8 @@ export default function TroubleshootingPage() {
         <Link className="text-link" href="/labs/packet-journey">
           Revisit Packet Journey
         </Link>
-        <Link className="text-link" href="/playground">
-          Build your own network →
+        <Link className="text-link" href="/tools/subnet">
+          Explore the Subnet Visualizer →
         </Link>
       </div>
     </main>

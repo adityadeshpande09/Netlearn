@@ -20,11 +20,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "NetLearn — See networking happen",
+    default: "NetLearn — Learn networking. Diagnose problems.",
     template: "%s | NetLearn",
   },
   description:
-    "An introduction to computer networks through visual explanations, packet journeys, and hands-on learning.",
+    "Learn networking through troubleshooting labs, guided packet journeys, and subnet visualizations. Diagnose problems and understand why networks break.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

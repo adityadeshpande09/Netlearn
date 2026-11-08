@@ -1,5 +1,14 @@
 # Teaching model boundaries
 
+## Public builder retirement
+
+The public Playground redirects to Troubleshooting Labs. Builder, terminal,
+and saved-network descriptions below refer to retained internal
+modules pending migration into the new lab framework. Those controls are not
+currently exposed by a public route. Existing saved browser data is untouched.
+Current labs still use repair choices; configuration-based investigations,
+VLAN/trunk labs and guided journey segments are planned separately.
+
 ## Packet Journey and Playground
 
 The app sends no real network traffic. Each trace starts with empty ARP/MAC tables and models a single ICMP echo request. The fixed lab crosses two networks through one router; its normal trace contains 26 events. Playground routes may cross multiple routers using connected/static routes.

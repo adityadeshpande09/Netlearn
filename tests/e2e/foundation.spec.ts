@@ -8,7 +8,9 @@ test("home renders with accessible content at the planned viewport widths", asyn
     await page.setViewportSize({ width, height: 900 });
     const response = await page.goto("/");
     expect(response?.status()).toBe(200);
-    await expect(page).toHaveTitle("NetLearn — See networking happen");
+    await expect(page).toHaveTitle(
+      "NetLearn — Learn networking. Diagnose problems.",
+    );
     await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
     expect(
       await page.evaluate(
@@ -45,7 +47,7 @@ test("unknown routes return 404 and allow keyboard recovery", async ({
   await recovery.press("Enter");
   await expect(page).toHaveURL("/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    "See networking happen.",
+    "Learn networking. Diagnose problems.",
   );
 });
 
@@ -79,7 +81,7 @@ test("guided labs are discoverable from navigation and the simulation guide work
   await page.goto("/");
   await page
     .getByRole("navigation", { name: "Main navigation", exact: true })
-    .getByRole("link", { name: "Guided labs", exact: true })
+    .getByRole("link", { name: "Troubleshooting Labs", exact: true })
     .press("Enter");
   await expect(page).toHaveURL("/labs/troubleshooting");
   const guide = page.locator(".simulation-guide");

@@ -189,8 +189,8 @@ export function AccountPanel() {
           <BookOpen size={21} />
           <h3>Every lesson stays open</h3>
           <p>
-            An account is optional. Saved playground networks stay on the
-            browser where you created them.
+            An account is optional. Lessons, Troubleshooting Labs, Packet
+            Journey, and the Subnet Visualizer are open to everyone.
           </p>
         </div>
         <Link className="text-action" href="/learn">

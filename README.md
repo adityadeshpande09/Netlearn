@@ -1,8 +1,8 @@
 # NetLearn
 
-**See networking happen.**
+**Learn networking. Diagnose problems. Understand why things break.**
 
-Make invisible networking processes visible. Learn through lessons with prediction questions, Packet Journey, guided troubleshooting labs, a Subnet Visualizer, and a Network Playground with browser saves. Optional accounts sync lesson progress.
+Investigate prepared networks, test repairs, and understand the packet-level evidence. NetLearn combines lessons, Troubleshooting Labs, Packet Journey, and a Subnet Visualizer. Optional accounts sync lesson progress.
 
 [Explore NetLearn](https://netlearn-ad.vercel.app) · [Learning path](https://netlearn-ad.vercel.app/learn) · [Try a lab](https://netlearn-ad.vercel.app/labs/troubleshooting)
 
@@ -13,8 +13,6 @@ Make invisible networking processes visible. Learn through lessons with predicti
 - **Understand route selection.** Select a router to compare matching prefixes, next hops and interfaces. Try isolated overlapping-route examples and inspect the winning prefix in binary.
 - **Troubleshoot a network.** Diagnose a missing gateway, a disconnected cable, or an expired TTL; choose a repair and inspect the simulator's result.
 - **Explore subnets.** Change an IPv4 prefix, inspect the binary boundary, compare address ranges, and split networks into smaller subnets.
-- **Build your own topology.** Connect and configure up to eight devices, test delivery, and save up to 20 named playgrounds in your browser. Native forms provide alternatives to dragging.
-- **Inspect a host.** Open its Playground terminal for `ip addr`, `ip route`, `ip neigh`, `ping` and `traceroute`. The missing-gateway exercise lets you diagnose a failure, repair it with `ip route add default via <IPv4>`, and trace the working path. Diagnostics use the same engine and label the absence of reply packets and timings.
 - **Keep your progress.** Guest completion stays in your browser. Optional Supabase accounts support email-code sign-in and synced lesson completion after setup.
 
 The interface includes keyboard controls, visible focus, reduced-motion support, responsive layouts, and text explanations alongside animations.
@@ -32,7 +30,7 @@ The interface includes keyboard controls, visible focus, reduced-motion support,
 | ICMP and Ping        | Echo requests, replies, and what a ping result can tell you  |
 | Subnetting           | Prefixes, network boundaries, host ranges, and /26 practice  |
 
-Lesson content and its technical references are documented in [content sources](docs/content-sources.md). The Week 4 lessons, refreshed interface and host terminal are part of this checkout; the live site updates after the corresponding release is published.
+Lesson content and its technical references are documented in [content sources](docs/content-sources.md). This checkout begins the professor-feedback transition toward troubleshooting. The public topology builder is retired; its terminal and configuration modules are retained internally for reuse in the next lab-framework unit. The live site changes only after an approved release.
 
 ## Run locally
 
@@ -51,15 +49,15 @@ For accounts, follow [Supabase setup](docs/accounts-setup.md). Put only the proj
 
 ## Built with
 
-| Area              | Technology                                                 |
-| ----------------- | ---------------------------------------------------------- |
-| App               | Next.js 16 App Router, React 19, strict TypeScript         |
-| Interface         | Tailwind CSS 4, Motion, Lucide icons                       |
-| Network canvas    | React Flow, with equivalent keyboard-friendly forms        |
-| Simulation        | Deterministic, framework-independent TypeScript            |
-| Optional accounts | Supabase Auth and PostgreSQL with row-level security       |
-| Validation        | Vitest, Testing Library, Playwright, axe, ESLint, Prettier |
-| Hosting           | Vercel; guest mode works independently of Supabase         |
+| Area              | Technology                                                  |
+| ----------------- | ----------------------------------------------------------- |
+| App               | Next.js 16 App Router, React 19, strict TypeScript          |
+| Interface         | Tailwind CSS 4, Motion, Lucide icons                        |
+| Network canvas    | React Flow, with device selectors and text-based inspectors |
+| Simulation        | Deterministic, framework-independent TypeScript             |
+| Optional accounts | Supabase Auth and PostgreSQL with row-level security        |
+| Validation        | Vitest, Testing Library, Playwright, axe, ESLint, Prettier  |
+| Hosting           | Vercel; guest mode works independently of Supabase          |
 
 Exact versions are recorded in `package.json` and `pnpm-lock.yaml`.
 
@@ -71,7 +69,7 @@ src/
   components/           Shared navigation and interface elements
   content/              Typed lessons, diagrams' content, and questions
   domain/networking/    Addressing, subnets, topology, and packet simulation
-  features/             Learning, labs, inspectors, playground, and accounts
+  features/             Learning, labs, inspectors, subnet tools, and accounts
   repositories/         Validated browser and account persistence boundaries
 supabase/               Migrations, access-policy tests, and email template
 tests/e2e/              Production browser tests
@@ -111,10 +109,10 @@ Google Fonts must be reachable during builds; visitors receive self-hosted font 
 
 NetLearn is an educational model. It sends no real packets and does not capture network traffic. The simulator models one ICMP echo request with fresh ARP/MAC tables per run; it does not generate an echo reply or an ICMP Time Exceeded response. The ICMP lesson explains those real-world behaviors separately.
 
-Playground saves stay on the current browser and origin; they do not sync to an account. Clearing browser data removes guest progress and saved playgrounds. Guided-lab attempts are temporary and do not mark lessons complete. See [all model boundaries](docs/model-limitations.md).
+The retired /playground URL redirects to Troubleshooting Labs. Existing browser-saved networks are not deleted, but the builder is no longer publicly accessible. Clearing browser data removes guest progress and any earlier saved networks. Guided-lab attempts are temporary and do not mark lessons complete. See [all model boundaries](docs/model-limitations.md).
 
 ## Next steps
 
-Planned work includes more guided exercises and live account verification. Cloud playground saves and additional protocols would require separate design and implementation; they are not current features. The [development plan](docs/development-plan.md) tracks delivered work and the next reviewable units.
+Next are configuration-based troubleshooting labs, accurate VLAN/trunk and interface-state scenarios, animated subnet splitting, and a guided Packet Journey. These are separate reviewable units, not current features. See the [professor-feedback plan](docs/professor-feedback-plan.md) for scope and commit boundaries. Account setup remains deferred.
 
 For code changes, follow [project conventions](AGENTS.md), keep simulation logic independent of the interface, and include relevant validation. Commit and release changes only after the owner's review.

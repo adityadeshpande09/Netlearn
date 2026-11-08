@@ -108,8 +108,8 @@ export default async function LessonPage({
                 </Link>
               ) : lesson.slug === "network-basics" ||
                 lesson.slug === "switches" ? (
-                <Link href="/playground">
-                  Connect your own devices in the Playground →
+                <Link href="/labs/packet-journey">
+                  Follow devices and connections in Packet Journey →
                 </Link>
               ) : (
                 <Link href="/labs/packet-journey">

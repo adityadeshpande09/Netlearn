@@ -18,12 +18,10 @@ export function SiteHeader() {
     return () => query.removeEventListener("change", handleChange);
   }, []);
   const links = [
-    { href: "/", label: "Overview" },
-    { href: "/learn", label: "Learning path" },
+    { href: "/learn", label: "Learn" },
+    { href: "/labs/troubleshooting", label: "Troubleshooting Labs" },
     { href: "/labs/packet-journey", label: "Packet Journey" },
-    { href: "/labs/troubleshooting", label: "Guided labs" },
-    { href: "/tools/subnet", label: "Subnet" },
-    { href: "/playground", label: "Playground" },
+    { href: "/tools/subnet", label: "Subnet Visualizer" },
   ];
   function close() {
     setExpanded(false);

@@ -19,11 +19,29 @@ async function expand(panel: Locator, label: string) {
   if ((await disclosure.getAttribute("open")) === null) await summary.click();
 }
 
-for (const route of ["/labs/packet-journey", "/playground"]) {
+async function openWorkingTrace(page: Page, route: string) {
+  await page.goto(route);
+  if (route === "/labs/troubleshooting") {
+    await page
+      .getByRole("radio", {
+        name: "Set PC-A’s gateway to 192.168.1.1",
+        exact: true,
+      })
+      .check();
+    await page
+      .getByRole("button", { name: "Test repair", exact: true })
+      .click();
+    await expect(page.locator(".guided-feedback")).toContainText(
+      "packet delivered",
+    );
+  }
+}
+
+for (const route of ["/labs/packet-journey", "/labs/troubleshooting"]) {
   test(`${route} separates local ARP traffic from the waiting IPv4 packet`, async ({
     page,
   }) => {
-    await page.goto(route);
+    await openWorkingTrace(page, route);
     const panel = inspector(page);
     const ethernet = panel.locator(".ethernet-layer");
     const arp = panel.locator(".arp-layer");
@@ -74,7 +92,7 @@ for (const route of ["/labs/packet-journey", "/playground"]) {
   test(`${route} shows computed headers and explains what a router changes`, async ({
     page,
   }) => {
-    await page.goto(route);
+    await openWorkingTrace(page, route);
     const panel = inspector(page);
     const ipv4 = panel.locator(".ip-layer");
     const icmp = panel.locator(".icmp-layer");
@@ -126,7 +144,7 @@ for (const route of ["/labs/packet-journey", "/playground"]) {
     test.setTimeout(60_000);
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.setViewportSize({ width: 375, height: 1000 });
-    await page.goto(route);
+    await openWorkingTrace(page, route);
     await expect(page.locator(".react-flow__node")).toHaveCount(5);
     await step(page, "Ask for the next hop’s MAC address").first().click();
     const panel = inspector(page);

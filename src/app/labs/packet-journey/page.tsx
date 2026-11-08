@@ -27,11 +27,8 @@ export default function PacketJourneyPage() {
         <Link className="text-link" href="/learn/packet-travel">
           Read the packet travel lesson
         </Link>
-        <Link className="text-link" href="/playground">
-          Build your own network →
-        </Link>
         <Link className="text-link" href="/labs/troubleshooting">
-          Try guided troubleshooting →
+          Try Troubleshooting Labs →
         </Link>
       </div>
     </main>

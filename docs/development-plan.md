@@ -1,5 +1,12 @@
 # NetLearn development plan
 
+The current product direction and next commit boundaries are documented in
+[the professor-feedback plan](professor-feedback-plan.md). The custom topology
+builder is being retired in favor of prepared troubleshooting investigations.
+Earlier milestones below remain a historical record, not promises that retired
+features are still publicly accessible. Vercel hosting and deferred account setup
+remain unchanged.
+
 On September 10 the owner authorized completion of all Week 1 as one reviewable batch. This supersedes earlier daily implementation pauses. The owner later separately approved the initial Week 1 commit and push to the public Netlearn repository. Website deployment remains a separate step.
 
 ## Week 1 implemented scope

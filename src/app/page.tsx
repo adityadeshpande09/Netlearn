@@ -1,17 +1,18 @@
 import Link from "next/link";
-import {
-  ArrowRight,
-  BookOpen,
-  Route,
-  Wrench,
-  Binary,
-  Network,
-} from "lucide-react";
+import { ArrowRight, BookOpen, Route, Wrench, Binary } from "lucide-react";
 import { PacketPreview } from "@/features/home/packet-preview";
 import { lessons } from "@/content/lessons";
 import styles from "@/features/home/home.module.css";
 
 const activities = [
+  {
+    href: "/labs/troubleshooting",
+    icon: Wrench,
+    label: "Find and fix",
+    title: "Troubleshooting Labs",
+    copy: "Investigate a broken network, test a repair, and explain the result.",
+    detail: "Follow the evidence in a preconfigured network",
+  },
   {
     href: "/labs/packet-journey",
     icon: Route,
@@ -21,28 +22,12 @@ const activities = [
     detail: "Start with a working network",
   },
   {
-    href: "/labs/troubleshooting",
-    icon: Wrench,
-    label: "Find and fix",
-    title: "Try the guided labs",
-    copy: "A packet has stopped. Read the evidence and test a repair.",
-    detail: "Three guided exercises",
-  },
-  {
     href: "/tools/subnet",
     icon: Binary,
     label: "Work it out",
     title: "Explore subnets",
     copy: "Change a prefix and see the address range change with it.",
     detail: "An interactive IPv4 calculator",
-  },
-  {
-    href: "/playground",
-    icon: Network,
-    label: "Build and experiment",
-    title: "Open the playground",
-    copy: "Connect your own devices, change their settings, and send a packet.",
-    detail: "Save networks in this browser",
   },
 ];
 
@@ -55,19 +40,20 @@ export default function HomePage() {
             A hands-on introduction to computer networks
           </p>
           <h1>
-            See networking <span>happen.</span>
+            Learn networking. <span>Diagnose problems.</span>
           </h1>
           <p className={styles.description}>
-            What actually happens after you press Send? Follow a packet, look
-            inside it, and learn how devices find each other.
+            Understand why things break. Follow a packet, inspect the evidence,
+            and learn what makes a network work.
           </p>
           <div className={styles.actions}>
-            <Link href="/learn" className="button">
-              Start learning <ArrowRight size={18} aria-hidden="true" />
+            <Link href="/labs/troubleshooting" className="button">
+              Try a troubleshooting lab{" "}
+              <ArrowRight size={18} aria-hidden="true" />
             </Link>
-            <a href="#practice" className="text-link">
-              Explore the tools <ArrowRight size={17} aria-hidden="true" />
-            </a>
+            <Link href="/learn" className="text-link">
+              Start with the basics <ArrowRight size={17} aria-hidden="true" />
+            </Link>
           </div>
           <p className={styles.note}>
             {lessons.length} short lessons · Free to explore · No account needed
@@ -115,8 +101,9 @@ export default function HomePage() {
             <h2 id="practice-heading">What would you like to figure out?</h2>
           </div>
           <p>
-            Use a ready-made example, or build something of your own. You can
-            reset an experiment and try again.
+            Start with a prepared network. Follow its behavior, investigate a
+            failure, and test your understanding. Reset and try again at any
+            time.
           </p>
         </div>
         <div className={styles.activities}>

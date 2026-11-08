@@ -50,8 +50,8 @@ export function PacketJourney() {
         <p>
           This is a teaching model. It does not send real network traffic or
           model a reply, NAT, packet corruption, queues, spanning tree, or
-          protocol timing. Use the Playground to change the topology and
-          addressing.
+          protocol timing. Try Troubleshooting Labs to investigate failures in
+          prepared networks.
         </p>
       </details>
     </>

@@ -1,6 +1,16 @@
 # NetLearn architecture
 
-The app combines eight original lessons, local progress, and interactive teaching tools, including guided troubleshooting. It has fifteen user-facing routes, plus custom 404 recovery. Supabase optionally provides email-code authentication and account lesson progress; guest learning and playground saves work without it.
+## Professor-feedback transition
+
+The public product now emphasizes Learn, Troubleshooting Labs, Packet Journey
+and Subnet Visualizer. `/playground` permanently redirects to labs; no public
+page imports the builder. Internal builder modules and saved-data decoders remain
+temporarily for extraction in the next unit. Their descriptions below document
+retained code, not currently accessible features. Existing browser saves are not
+deleted. React Flow, networking logic and shared inspectors remain in use.
+See [the staged implementation plan](professor-feedback-plan.md).
+
+The app combines eight original lessons, local progress, and interactive teaching tools, including guided troubleshooting. It has fourteen public content routes, a legacy Playground redirect, and custom 404 recovery. Supabase optionally provides email-code authentication and account lesson progress; guest learning works without it.
 
 ## Stack and rendering
 

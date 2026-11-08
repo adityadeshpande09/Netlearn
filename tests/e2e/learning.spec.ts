@@ -157,11 +157,11 @@ test("unavailable storage preserves progress while navigating within the tab", a
   ).toBeVisible();
   await page
     .locator("header")
-    .getByRole("link", { name: "Overview", exact: true })
+    .getByRole("link", { name: "NetLearn home", exact: true })
     .click();
   await page
     .locator("header")
-    .getByRole("link", { name: "Learning path", exact: true })
+    .getByRole("link", { name: "Learn", exact: true })
     .click();
   await expect(
     page.getByText(`1 of ${lessons.length} lessons completed`),
@@ -208,7 +208,7 @@ test("mobile navigation supports keyboard close and does not duplicate desktop n
   await page.goto("/");
   await page.getByRole("button", { name: "Open navigation" }).click();
   const nav = page.getByRole("navigation", { name: "Mobile navigation" });
-  await nav.getByRole("link", { name: "Learning path" }).focus();
+  await nav.getByRole("link", { name: "Learn" }).focus();
   await page.keyboard.press("Escape");
   await expect(nav).toHaveCount(0);
   await expect(
